@@ -1,2 +1,3 @@
-# polylinguist-android
-Android app for Polylinguist
+# Polylinguist (Android)
+
+Android app for Polylinguist.
