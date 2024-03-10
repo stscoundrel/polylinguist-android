@@ -21,10 +21,11 @@ class MainActivity : ComponentActivity() {
 
         // TODO: Debug only.
         val app: PolylinguistApplication = application as PolylinguistApplication
-        val service = app.container.statisticsService
+        val service = app.container.statisticsRepository
         lifecycleScope.launch {
-            val stats = service.getCurrentStatistics()
-            for (stat in stats) {
+            val stats = service.getCurrent()
+            Log.v("Lol", stats.date.toString())
+            for (stat in stats.statistics) {
                 Log.v("Lol", stat.toString())
             }
         }
