@@ -1,4 +1,4 @@
-name: Android - Test
+name: Android - Unit Test
 
 on: [pull_request]
 
