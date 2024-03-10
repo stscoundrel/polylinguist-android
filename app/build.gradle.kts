@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -72,7 +73,7 @@ dependencies {
     // Mockito
     testImplementation("org.mockito:mockito-core:3.12.4")
     testImplementation("org.mockito:mockito-inline:3.12.4")
-    androidTestImplementation("org.mockito:mockito-android:3.12.4")
+    testImplementation("org.mockito:mockito-android:3.12.4")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
@@ -91,6 +92,5 @@ dependencies {
 
     // Okhttp
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
-
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 }
