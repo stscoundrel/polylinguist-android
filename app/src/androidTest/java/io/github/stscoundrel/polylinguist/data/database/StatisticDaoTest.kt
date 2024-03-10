@@ -55,6 +55,30 @@ class StatisticDaoTest {
     }
 
     @Test
+    fun insertManyAndGetStatistics() = runTest {
+        val statistic1 = StatisticEntity(
+            language = "Kotlin",
+            percentage = 63.3,
+            color = "FFFFF",
+            date = LocalDate.of(2024, 1, 1)
+        )
+
+        val statistic2 = StatisticEntity(
+            language = "Java",
+            percentage = 36.7,
+            color = "F4F4F4",
+            date = LocalDate.of(2024, 1, 1)
+        )
+
+        statisticsDao.insertAll(listOf(statistic1, statistic2))
+
+        val statistics = statisticsDao.getAll()
+
+        // Should contain both inserted statistics.
+        assertEquals(2, statistics.size)
+    }
+
+    @Test
     fun deleteStatistics() = runTest {
         val statistic = StatisticEntity(
             language = "Kotlin",

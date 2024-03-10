@@ -13,6 +13,9 @@ interface StatisticDao {
     @Insert
     fun insert(statistic: StatisticEntity)
 
+    @Insert
+    fun insertAll(statistics: List<StatisticEntity>)
+
     @Delete
     fun delete(statistic: StatisticEntity)
 }

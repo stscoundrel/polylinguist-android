@@ -1,6 +1,9 @@
 package io.github.stscoundrel.polylinguist.di
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import io.github.stscoundrel.polylinguist.data.StatisticsRepository
+import io.github.stscoundrel.polylinguist.data.database.AppDatabase
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatisticsService
 import io.github.stscoundrel.polylinguist.data.network.PolylinguistHTTPService
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
@@ -13,7 +16,7 @@ import retrofit2.Retrofit
  */
 interface AppContainer {
     // TODO: debug only
-    val statisticsService: StatisticsService
+    val statisticsRepository: StatisticsRepository
 }
 
 /**
@@ -21,7 +24,7 @@ interface AppContainer {
  *
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
     private val baseUrl = "https://polylinguist.vercel.app/api/username/stscoundrel/"
 
     /**
@@ -42,7 +45,11 @@ class DefaultAppContainer : AppContainer {
     /**
      * DI implementation for StatisticsService
      */
-    override val statisticsService: StatisticsService by lazy {
+    private val statisticsService: StatisticsService by lazy {
         NetworkStatisticsService(retrofitService)
+    }
+
+    override val statisticsRepository: StatisticsRepository by lazy {
+        StatisticsRepository(statisticsService, AppDatabase.getDatabase(context).statisticsDao())
     }
 }
