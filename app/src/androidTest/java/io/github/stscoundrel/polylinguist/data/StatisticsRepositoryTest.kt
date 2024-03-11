@@ -1,31 +1,33 @@
 package io.github.stscoundrel.polylinguist.data
 
+
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import io.github.stscoundrel.polylinguist.data.database.AppDatabase
 import io.github.stscoundrel.polylinguist.data.database.StatisticDao
+import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 
 val networkStatistics: List<NetworkStatistic> = listOf(
     NetworkStatistic(
-        language= "Java",
+        language = "Java",
         percentage = 66.6,
         color = "#F3F3F3"
     ),
     NetworkStatistic(
-        language= "Kotlin",
+        language = "Kotlin",
         percentage = 33.3,
         color = "#F4F4F4"
     ),
 )
 
-class InMemoryStatisticsService: StatisticsService {
+class InMemoryStatisticsService : StatisticsService {
     // Test double for statistics service.
     override suspend fun getCurrentStatistics(): List<NetworkStatistic> {
         return networkStatistics
@@ -60,7 +62,7 @@ class StatisticsRepositoryTest {
                     color = "#F3F3F3"
                 ),
                 Statistic(
-                    language= "Kotlin",
+                    language = "Kotlin",
                     percentage = 33.3,
                     color = "#F4F4F4"
                 )
@@ -70,7 +72,42 @@ class StatisticsRepositoryTest {
         val result = repository.getCurrent()
 
         // Should've fetched data & transformed to data model
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun getByDateTest() = runBlocking {
+        val date = LocalDate.of(2024, 1, 1)
+
+        // Populate given days stats to be found in database.
+        val initialStatistics = listOf(
+            StatisticEntity(
+                language = "Kotlin",
+                percentage = 63.0,
+                color = "FFFFF",
+                date = date
+            ),
+            StatisticEntity(
+                language = "Java",
+                percentage = 36.0,
+                color = "F4F4F4",
+                date = date
+            ),
+        )
+
+        statisticDao.insertAll(initialStatistics)
+
+        val result = repository.getByDate(date)
+
+        assertEquals(result.date, date)
+        assertEquals(result.statistics.size, 2)
+
+        // Get for another day, which has no entries.
+        val emptyDate = LocalDate.of(2020, 1, 1)
+        val emptyResult = repository.getByDate(emptyDate)
+
+        assertEquals(emptyResult.date, emptyDate)
+        assertEquals(emptyResult.statistics.size, 0)
     }
 
     @Test
@@ -99,14 +136,14 @@ class StatisticsRepositoryTest {
 
         // Rows should contain expected data.
         val firstStat = dbRows.first()
-        Assert.assertEquals("Cobol", firstStat.language)
-        Assert.assertEquals(50.0, firstStat.percentage, 0.0)
-        Assert.assertEquals(statistics.date, firstStat.date)
+        assertEquals("Cobol", firstStat.language)
+        assertEquals(50.0, firstStat.percentage, 0.0)
+        assertEquals(statistics.date, firstStat.date)
 
 
         val secondStat = dbRows.elementAt(1)
-        Assert.assertEquals("Fortran", secondStat.language)
-        Assert.assertEquals(50.0, secondStat.percentage, 0.0)
-        Assert.assertEquals(statistics.date, firstStat.date)
+        assertEquals("Fortran", secondStat.language)
+        assertEquals(50.0, secondStat.percentage, 0.0)
+        assertEquals(statistics.date, firstStat.date)
     }
 }

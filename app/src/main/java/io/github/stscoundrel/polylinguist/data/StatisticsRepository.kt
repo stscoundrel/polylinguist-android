@@ -19,6 +19,15 @@ class StatisticsRepository(
         )
     }
 
+    suspend fun getByDate(date: LocalDate): Statistics {
+        val statistics = statisticsDao.getByDate(date)
+
+        return Statistics(
+            date = date,
+            statistics = statistics.map { createStatisticFromEntity(it) }
+        )
+    }
+
     suspend fun save(statistic: Statistics) {
         statisticsDao.insertAll(
             statistic.statistics
