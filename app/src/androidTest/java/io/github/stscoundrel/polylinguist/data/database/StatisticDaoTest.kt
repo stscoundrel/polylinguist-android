@@ -104,6 +104,41 @@ class StatisticDaoTest {
     }
 
     @Test
+    fun getByDate() = runTest {
+        val initialStatistics = listOf(
+            StatisticEntity(
+                language = "Kotlin",
+                percentage = 63.0,
+                color = "FFFFF",
+                date = LocalDate.of(2024, 1, 1)
+            ),
+            StatisticEntity(
+                language = "Java",
+                percentage = 36.0,
+                color = "F4F4F4",
+                date = LocalDate.of(2024, 1, 1)
+            ),
+            StatisticEntity(
+                language = "PHP",
+                percentage = 1.0,
+                color = "F5F5F5",
+                date = LocalDate.of(2011, 1, 1)
+            )
+        )
+
+        statisticsDao.insertAll(initialStatistics)
+
+        val results2024 = statisticsDao.getByDate(LocalDate.of(2024, 1, 1))
+        val results2011 = statisticsDao.getByDate(LocalDate.of(2011, 1, 1))
+
+        assertEquals(results2024.size, 2)
+        assertEquals(results2011.size, 1)
+
+        assertEquals(listOf("Kotlin", "Java"), results2024.map{it.language})
+        assertEquals("PHP", results2011.first().language)
+    }
+
+    @Test
     fun serializesAndDeserializesDates() = runTest {
         val date = LocalDate.of(2024, 1, 1)
         val statistic = StatisticEntity(

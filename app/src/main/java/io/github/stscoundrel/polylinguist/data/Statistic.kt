@@ -23,6 +23,14 @@ fun createStatisticFromNetWorkStatistic(networkStatistic: NetworkStatistic): Sta
     )
 }
 
+fun createStatisticFromEntity(entity: StatisticEntity): Statistic {
+    return Statistic(
+        language = entity.language,
+        percentage = entity.percentage,
+        color = entity.color,
+    )
+}
+
 fun createEntityFromStatistic(statistic: Statistic, date: LocalDate): StatisticEntity {
     return StatisticEntity(
         language = statistic.language,
