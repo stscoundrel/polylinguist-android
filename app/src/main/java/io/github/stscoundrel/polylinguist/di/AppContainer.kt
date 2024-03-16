@@ -51,7 +51,10 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     }
 
     private val statisticsRepository: DefaultStatisticsRepository by lazy {
-        DefaultStatisticsRepository(statisticsService, AppDatabase.getDatabase(context).statisticsDao())
+        DefaultStatisticsRepository(
+            statisticsService,
+            AppDatabase.getDatabase(context).statisticsDao()
+        )
     }
 
     override val getCurrentStatisticsUseCase: GetCurrentStatisticsUseCase by lazy {
