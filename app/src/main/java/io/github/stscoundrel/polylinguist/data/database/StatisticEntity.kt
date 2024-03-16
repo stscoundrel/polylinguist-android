@@ -9,6 +9,7 @@ data class StatisticEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val language: String,
+    val size: Int,
     val percentage: Double,
     val color: String,
     val date: LocalDate

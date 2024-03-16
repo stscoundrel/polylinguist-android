@@ -19,10 +19,10 @@ class NetworkStatisticsServiceTest {
     fun getCurrentStatisticsTest() = runBlocking {
         val responseList = listOf(
             NetworkStatistic(
-                language="Java", percentage=2.083404634958113, color="#b07219"
+                language="Java", percentage=2.083404634958113, color="#b07219", size=54178,
             ),
             NetworkStatistic(
-                language="Kotlin", percentage=2.755940787285302, color="#A97BFF"
+                language="Kotlin", percentage=2.755940787285302, color="#A97BFF", size=89221,
             ),
         )
 

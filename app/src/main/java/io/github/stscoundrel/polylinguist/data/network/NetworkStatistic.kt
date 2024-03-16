@@ -8,6 +8,9 @@ data class NetworkStatistic(
     @SerialName(value = "Name")
     val language: String,
 
+    @SerialName(value = "Size")
+    val size: Int,
+
     @SerialName(value = "Percentage")
     val percentage: Double,
 

@@ -18,11 +18,13 @@ val networkStatistics: List<NetworkStatistic> = listOf(
     NetworkStatistic(
         language = "Java",
         percentage = 66.6,
+        size = 1332,
         color = "#F3F3F3"
     ),
     NetworkStatistic(
         language = "Kotlin",
         percentage = 33.3,
+        size = 666,
         color = "#F4F4F4"
     ),
 )
@@ -59,11 +61,13 @@ class StatisticsRepositoryTest {
                 Statistic(
                     language = "Java",
                     percentage = 66.6,
+                    size = 1332,
                     color = "#F3F3F3"
                 ),
                 Statistic(
                     language = "Kotlin",
                     percentage = 33.3,
+                    size = 666,
                     color = "#F4F4F4"
                 )
             )
@@ -84,12 +88,14 @@ class StatisticsRepositoryTest {
             StatisticEntity(
                 language = "Kotlin",
                 percentage = 63.0,
+                size = 1332,
                 color = "FFFFF",
                 date = date
             ),
             StatisticEntity(
                 language = "Java",
                 percentage = 36.0,
+                size = 666,
                 color = "F4F4F4",
                 date = date
             ),
@@ -118,16 +124,18 @@ class StatisticsRepositoryTest {
                 Statistic(
                     language = "Cobol",
                     color = "00000",
+                    size = 1000,
                     percentage = 50.0,
                 ),
                 Statistic(
                     language = "Fortran",
                     color = "FFFFFF",
+                    size = 1000,
                     percentage = 50.0,
                 ),
             )
         )
-        val result = repository.save(
+        repository.save(
             statistics
         )
 

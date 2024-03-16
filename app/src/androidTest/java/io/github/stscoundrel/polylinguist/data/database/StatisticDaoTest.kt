@@ -32,6 +32,7 @@ class StatisticDaoTest {
         val statistic1 = StatisticEntity(
             language = "Kotlin",
             percentage = 63.3,
+            size = 1260,
             color = "FFFFF",
             date = LocalDate.of(2024, 1, 1)
 
@@ -40,6 +41,7 @@ class StatisticDaoTest {
         val statistic2 = StatisticEntity(
             language = "Java",
             percentage = 36.7,
+            size = 734,
             color = "F4F4F4",
             date = LocalDate.of(2024, 1, 1)
 
@@ -59,6 +61,7 @@ class StatisticDaoTest {
         val statistic1 = StatisticEntity(
             language = "Kotlin",
             percentage = 63.3,
+            size = 1260,
             color = "FFFFF",
             date = LocalDate.of(2024, 1, 1)
         )
@@ -66,6 +69,7 @@ class StatisticDaoTest {
         val statistic2 = StatisticEntity(
             language = "Java",
             percentage = 36.7,
+            size = 734,
             color = "F4F4F4",
             date = LocalDate.of(2024, 1, 1)
         )
@@ -83,6 +87,7 @@ class StatisticDaoTest {
         val statistic = StatisticEntity(
             language = "Kotlin",
             percentage = 63.3,
+            size = 1260,
             color = "FFFFF",
             date = LocalDate.of(2024, 1, 1)
         )
@@ -109,18 +114,21 @@ class StatisticDaoTest {
             StatisticEntity(
                 language = "Kotlin",
                 percentage = 63.0,
+                size = 1260,
                 color = "FFFFF",
                 date = LocalDate.of(2024, 1, 1)
             ),
             StatisticEntity(
                 language = "Java",
                 percentage = 36.0,
+                size = 720,
                 color = "F4F4F4",
                 date = LocalDate.of(2024, 1, 1)
             ),
             StatisticEntity(
                 language = "PHP",
                 percentage = 1.0,
+                size = 2,
                 color = "F5F5F5",
                 date = LocalDate.of(2011, 1, 1)
             )
@@ -134,7 +142,7 @@ class StatisticDaoTest {
         assertEquals(results2024.size, 2)
         assertEquals(results2011.size, 1)
 
-        assertEquals(listOf("Kotlin", "Java"), results2024.map{it.language})
+        assertEquals(listOf("Kotlin", "Java"), results2024.map { it.language })
         assertEquals("PHP", results2011.first().language)
     }
 
@@ -144,6 +152,7 @@ class StatisticDaoTest {
         val statistic = StatisticEntity(
             language = "Kotlin",
             percentage = 63.3,
+            size = 1260,
             color = "FFFFF",
             date = date
         )
