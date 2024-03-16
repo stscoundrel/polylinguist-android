@@ -3,6 +3,7 @@ package io.github.stscoundrel.polylinguist.data.database
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -47,14 +48,15 @@ class StatisticDaoTest {
 
         )
 
-        statisticsDao.insert(statistic1)
-        statisticsDao.insert(statistic2)
+        statisticsDao.upsert(statistic1)
+        statisticsDao.upsert(statistic2)
 
         val statistics = statisticsDao.getAll()
 
         // Should contain both inserted statistics.
         assertEquals(2, statistics.size)
     }
+
 
     @Test
     fun insertManyAndGetStatistics() = runTest {
@@ -74,12 +76,88 @@ class StatisticDaoTest {
             date = LocalDate.of(2024, 1, 1)
         )
 
-        statisticsDao.insertAll(listOf(statistic1, statistic2))
+        statisticsDao.upsertAll(listOf(statistic1, statistic2))
 
         val statistics = statisticsDao.getAll()
 
         // Should contain both inserted statistics.
         assertEquals(2, statistics.size)
+    }
+
+    @Test
+    fun updateStatistics() = runTest {
+        val initialStatistic = StatisticEntity(
+            language = "Kotlin",
+            percentage = 63.3,
+            size = 1260,
+            color = "FFFFF",
+            date = LocalDate.of(2024, 1, 1)
+
+        )
+
+        val changedStatistic = StatisticEntity(
+            language = "Kotlin",
+            percentage = 89.0,
+            size = 3500,
+            color = "FFFFF",
+            date = LocalDate.of(2024, 1, 1)
+
+        )
+
+        statisticsDao.upsert(initialStatistic)
+
+        val initialDbStatistics = statisticsDao.getAll()
+
+        // Should have initial stat in db.
+        assertEquals(1, initialDbStatistics.size)
+        assertEquals(initialStatistic, initialDbStatistics.first())
+
+        // Update the changed stat. Should replace original due to
+        // date & language being same.
+        statisticsDao.upsert(changedStatistic)
+        val dbStatistics = statisticsDao.getAll()
+
+        // Should have updated initial DB stat, not created a new one.
+        assertEquals(1, dbStatistics.size)
+        assertEquals(changedStatistic, dbStatistics.first())
+    }
+
+    @Test
+    fun updateManyStatistics() = runTest {
+        val statistic1 = StatisticEntity(
+            language = "Kotlin",
+            percentage = 63.3,
+            size = 1260,
+            color = "FFFFF",
+            date = LocalDate.of(2024, 1, 1)
+        )
+
+        val statistic2 = StatisticEntity(
+            language = "Java",
+            percentage = 36.7,
+            size = 734,
+            color = "F4F4F4",
+            date = LocalDate.of(2024, 1, 1)
+        )
+
+        statisticsDao.upsertAll(listOf(statistic1, statistic2))
+        val initialDbStatistics = statisticsDao.getAll()
+
+        // Should have initial stats in db.
+        assertEquals(2, initialDbStatistics.size)
+
+        // Update both stats.
+        val changedStatistic = listOf(
+            statistic1.copy(size = 666, percentage = 66.6),
+            statistic2.copy(size = 333, percentage = 33.3)
+        )
+        // Update the changed stats. Should replace originals.
+        statisticsDao.upsertAll(changedStatistic)
+        val dbStatistics = statisticsDao.getAll()
+
+        // Should have updated initial DB stat, not created a new one.
+        assertEquals(2, dbStatistics.size)
+        assertEquals(changedStatistic, dbStatistics)
     }
 
     @Test
@@ -92,7 +170,7 @@ class StatisticDaoTest {
             date = LocalDate.of(2024, 1, 1)
         )
 
-        statisticsDao.insert(statistic)
+        statisticsDao.upsert(statistic)
 
         val statistics = statisticsDao.getAll()
 
@@ -134,7 +212,7 @@ class StatisticDaoTest {
             )
         )
 
-        statisticsDao.insertAll(initialStatistics)
+        statisticsDao.upsertAll(initialStatistics)
 
         val results2024 = statisticsDao.getByDate(LocalDate.of(2024, 1, 1))
         val results2011 = statisticsDao.getByDate(LocalDate.of(2011, 1, 1))
@@ -142,7 +220,7 @@ class StatisticDaoTest {
         assertEquals(results2024.size, 2)
         assertEquals(results2011.size, 1)
 
-        assertEquals(listOf("Kotlin", "Java"), results2024.map { it.language })
+        assertTrue(listOf("Kotlin", "Java").containsAll(results2024.map { it.language }))
         assertEquals("PHP", results2011.first().language)
     }
 
@@ -157,7 +235,7 @@ class StatisticDaoTest {
             date = date
         )
 
-        statisticsDao.insert(statistic)
+        statisticsDao.upsert(statistic)
 
         val dbStatistic = statisticsDao.getAll().first()
 

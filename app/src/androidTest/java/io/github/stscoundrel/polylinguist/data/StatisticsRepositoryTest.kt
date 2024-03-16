@@ -101,7 +101,7 @@ class StatisticsRepositoryTest {
             ),
         )
 
-        statisticDao.insertAll(initialStatistics)
+        statisticDao.upsertAll(initialStatistics)
 
         val result = repository.getByDate(date)
 

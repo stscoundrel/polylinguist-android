@@ -2,8 +2,8 @@ package io.github.stscoundrel.polylinguist.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
 import java.time.LocalDate
 
 @Dao
@@ -11,11 +11,11 @@ interface StatisticDao {
     @Query("SELECT * FROM statistics")
     fun getAll(): List<StatisticEntity>
 
-    @Insert
-    fun insert(statistic: StatisticEntity)
+    @Upsert
+    fun upsert(statistic: StatisticEntity)
 
-    @Insert
-    fun insertAll(statistics: List<StatisticEntity>)
+    @Upsert
+    fun upsertAll(statistics: List<StatisticEntity>)
 
     @Delete
     fun delete(statistic: StatisticEntity)
