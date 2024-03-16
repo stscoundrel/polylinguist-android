@@ -2,13 +2,15 @@ package io.github.stscoundrel.polylinguist.data
 
 import io.github.stscoundrel.polylinguist.data.database.StatisticDao
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
+import io.github.stscoundrel.polylinguist.domain.Statistics
+import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
 import java.time.LocalDate
 
-class StatisticsRepository(
+class DefaultStatisticsRepository(
     private val networkStatisticsService: StatisticsService,
     private val statisticsDao: StatisticDao
-) {
-    suspend fun getCurrent(): Statistics {
+) : StatisticsRepository {
+    override suspend fun getCurrent(): Statistics {
         val networkStatistic = networkStatisticsService.getCurrentStatistics()
 
         val statistics = networkStatistic.map { createStatisticFromNetWorkStatistic(it) }
@@ -19,7 +21,7 @@ class StatisticsRepository(
         )
     }
 
-    suspend fun getByDate(date: LocalDate): Statistics {
+    override suspend fun getByDate(date: LocalDate): Statistics {
         val statistics = statisticsDao.getByDate(date)
 
         return Statistics(
@@ -28,7 +30,7 @@ class StatisticsRepository(
         )
     }
 
-    suspend fun save(statistic: Statistics) {
+    override suspend fun save(statistic: Statistics) {
         statisticsDao.upsertAll(
             statistic.statistics
                 .map {

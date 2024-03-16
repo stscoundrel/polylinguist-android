@@ -2,19 +2,8 @@ package io.github.stscoundrel.polylinguist.data
 
 import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
+import io.github.stscoundrel.polylinguist.domain.Statistic
 import java.time.LocalDate
-
-data class Statistic(
-    val language: String,
-    val size: Int,
-    val percentage: Double,
-    val color: String,
-)
-
-data class Statistics(
-    val statistics: List<Statistic>,
-    val date: LocalDate
-)
 
 fun createStatisticFromNetWorkStatistic(networkStatistic: NetworkStatistic): Statistic {
     return Statistic(

@@ -8,6 +8,8 @@ import io.github.stscoundrel.polylinguist.data.database.StatisticDao
 import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
+import io.github.stscoundrel.polylinguist.domain.Statistic
+import io.github.stscoundrel.polylinguist.domain.Statistics
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -38,7 +40,7 @@ class InMemoryStatisticsService : StatisticsService {
 
 class StatisticsRepositoryTest {
     private lateinit var statisticDao: StatisticDao
-    private lateinit var repository: StatisticsRepository
+    private lateinit var repository: DefaultStatisticsRepository
 
     @Before
     fun initRepository() {
@@ -50,7 +52,7 @@ class StatisticsRepositoryTest {
         ).allowMainThreadQueries().build()
 
         statisticDao = database.statisticsDao()
-        repository = StatisticsRepository(InMemoryStatisticsService(), statisticDao)
+        repository = DefaultStatisticsRepository(InMemoryStatisticsService(), statisticDao)
     }
 
     @Test
