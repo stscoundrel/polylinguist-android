@@ -21,9 +21,9 @@ class MainActivity : ComponentActivity() {
 
         // TODO: Debug only.
         val app: PolylinguistApplication = application as PolylinguistApplication
-        val service = app.container.statisticsRepository
+        val useCase = app.container.getCurrentStatisticsUseCase
         lifecycleScope.launch {
-            val stats = service.getCurrent()
+            val stats = useCase()
             Log.v("Lol", stats.date.toString())
             for (stat in stats.statistics) {
                 Log.v("Lol", stat.toString())
