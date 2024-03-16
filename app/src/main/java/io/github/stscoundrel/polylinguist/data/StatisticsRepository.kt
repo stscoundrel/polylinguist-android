@@ -29,7 +29,7 @@ class StatisticsRepository(
     }
 
     suspend fun save(statistic: Statistics) {
-        statisticsDao.insertAll(
+        statisticsDao.upsertAll(
             statistic.statistics
                 .map {
                     createEntityFromStatistic(it, statistic.date)
