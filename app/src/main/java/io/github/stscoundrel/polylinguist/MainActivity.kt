@@ -12,16 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import io.github.stscoundrel.polylinguist.ui.theme.CurrentStatisticsScreen
+import io.github.stscoundrel.polylinguist.ui.theme.CurrentStatisticsViewModel
 import io.github.stscoundrel.polylinguist.ui.theme.PolylinguistTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO: Debug only.
         val app: PolylinguistApplication = application as PolylinguistApplication
         val useCase = app.container.getCurrentStatisticsUseCase
+
+        // TODO: Debug only.
         lifecycleScope.launch {
             val stats = useCase()
             Log.v("Lol", stats.date.toString())
@@ -37,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    CurrentStatisticsScreen(CurrentStatisticsViewModel(useCase))
                 }
             }
         }
