@@ -2,7 +2,7 @@ package io.github.stscoundrel.polylinguist.di
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import io.github.stscoundrel.polylinguist.data.StatisticsRepository
+import io.github.stscoundrel.polylinguist.data.DefaultStatisticsRepository
 import io.github.stscoundrel.polylinguist.data.database.AppDatabase
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatisticsService
 import io.github.stscoundrel.polylinguist.data.network.PolylinguistHTTPService
@@ -16,7 +16,7 @@ import retrofit2.Retrofit
  */
 interface AppContainer {
     // TODO: debug only
-    val statisticsRepository: StatisticsRepository
+    val statisticsRepository: DefaultStatisticsRepository
 }
 
 /**
@@ -49,7 +49,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         NetworkStatisticsService(retrofitService)
     }
 
-    override val statisticsRepository: StatisticsRepository by lazy {
-        StatisticsRepository(statisticsService, AppDatabase.getDatabase(context).statisticsDao())
+    override val statisticsRepository: DefaultStatisticsRepository by lazy {
+        DefaultStatisticsRepository(statisticsService, AppDatabase.getDatabase(context).statisticsDao())
     }
 }
