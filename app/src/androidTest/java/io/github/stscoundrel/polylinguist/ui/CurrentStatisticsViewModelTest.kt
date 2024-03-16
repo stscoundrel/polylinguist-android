@@ -83,6 +83,9 @@ class CurrentStatisticsViewModelTest {
         // Wait for coroutine to complete.
         advanceUntilIdle()
 
+        // CI seems to be flaky here. Just add extra wait for it to catch up.
+        Thread.sleep(3000)
+
         // Should now contain statistics in the state.
         assertEquals(todaysStatistics, viewModel.currentStatistics.value)
     }
