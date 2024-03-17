@@ -4,8 +4,10 @@ import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
 import io.github.stscoundrel.polylinguist.domain.usecase.GetCurrentStatisticsUseCase
-import io.github.stscoundrel.polylinguist.ui.theme.CurrentStatisticsViewModel
+import io.github.stscoundrel.polylinguist.domain.usecase.GetLatestStatisticsUseCase
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -35,6 +37,30 @@ val todaysStatistics = Statistics(
     )
 )
 
+val initialStatistics = Statistics(
+    date = LocalDate.now(),
+    statistics = listOf(
+        Statistic(
+            language = "Java",
+            percentage = 66.0,
+            size = 1332,
+            color = "#F3F3F3"
+        ),
+        Statistic(
+            language = "Kotlin",
+            percentage = 33.0,
+            size = 666,
+            color = "#F4F4F4"
+        ),
+        Statistic(
+            language = "Scala",
+            percentage = 1.0,
+            size = 1,
+            color = "#F4F4F4"
+        ),
+    )
+)
+
 class InMemoryStatisticsRepository : StatisticsRepository {
     val statistics: MutableMap<LocalDate, List<Statistic>> = mutableMapOf()
 
@@ -43,7 +69,7 @@ class InMemoryStatisticsRepository : StatisticsRepository {
     }
 
     override suspend fun getLatest(): Statistics {
-        TODO("Not yet implemented")
+        return initialStatistics
     }
 
     override suspend fun getByDate(date: LocalDate): Statistics {
@@ -57,11 +83,13 @@ class InMemoryStatisticsRepository : StatisticsRepository {
 }
 
 class CurrentStatisticsViewModelTest {
-    private lateinit var useCase: GetCurrentStatisticsUseCase
+    private lateinit var currentStatsUseCase: GetCurrentStatisticsUseCase
+    private lateinit var latestStatsUseCase: GetLatestStatisticsUseCase
 
     @Before
     fun initRepository() {
-        useCase = GetCurrentStatisticsUseCase(InMemoryStatisticsRepository())
+        currentStatsUseCase = GetCurrentStatisticsUseCase(InMemoryStatisticsRepository())
+        latestStatsUseCase = GetLatestStatisticsUseCase(InMemoryStatisticsRepository())
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -72,26 +100,53 @@ class CurrentStatisticsViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun populatesCurrentStatistics() = runTest {
-        val viewModel = CurrentStatisticsViewModel(useCase, false)
+    fun populatesInitialStatisticsTest() = runTest {
+        val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
 
         // Initially empty stats.
-        assertEquals(null, viewModel.currentStatistics.value)
+        assertEquals(null, viewModel.statistics.value)
+
+        // Should be loading the initial stats since creation.
+        assertTrue(viewModel.isLoading.value)
+
+        // Wait for load to complete, should fetch initial stats.
+        advanceUntilIdle()
+
+        // Allow time for CI flakiness.
+        Thread.sleep(3000)
+
+        // Should've finished loading.
+        assertFalse(viewModel.isLoading.value)
+
+        // Should now contain statistics in the state.
+        assertEquals(initialStatistics, viewModel.statistics.value)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun populatesCurrentStatisticsTest() = runTest {
+        val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
 
         // Trigger update
-        viewModel.getStatistics()
+        viewModel.getCurrentStatistics()
+
+        // Should be loading
+        assertTrue(viewModel.isLoading.value)
 
         // Should still be empty, as fetch is happening in background thread.
-        assertEquals(null, viewModel.currentStatistics.value)
+        assertEquals(null, viewModel.statistics.value)
 
         // Wait for coroutine to complete.
         advanceUntilIdle()
 
-        // CI seems to be flaky here. Just add extra wait for it to catch up.
+        // Allow time for CI flakiness.
         Thread.sleep(3000)
 
+        // Should've finished loading
+        assertFalse(viewModel.isLoading.value)
+
         // Should now contain statistics in the state.
-        assertEquals(todaysStatistics, viewModel.currentStatistics.value)
+        assertEquals(todaysStatistics, viewModel.statistics.value)
     }
 
 }

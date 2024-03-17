@@ -9,6 +9,7 @@ import io.github.stscoundrel.polylinguist.data.network.NetworkStatisticsService
 import io.github.stscoundrel.polylinguist.data.network.PolylinguistHTTPService
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.usecase.GetCurrentStatisticsUseCase
+import io.github.stscoundrel.polylinguist.domain.usecase.GetLatestStatisticsUseCase
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
@@ -19,6 +20,7 @@ import retrofit2.Retrofit
 interface AppContainer {
     // TODO: debug only
     val getCurrentStatisticsUseCase: GetCurrentStatisticsUseCase
+    val getLatestStatisticsUseCase: GetLatestStatisticsUseCase
 }
 
 /**
@@ -66,5 +68,9 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val getCurrentStatisticsUseCase: GetCurrentStatisticsUseCase by lazy {
         GetCurrentStatisticsUseCase(statisticsRepository)
+    }
+
+    override val getLatestStatisticsUseCase: GetLatestStatisticsUseCase by lazy {
+        GetLatestStatisticsUseCase(statisticsRepository)
     }
 }
