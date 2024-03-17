@@ -1,6 +1,7 @@
 package io.github.stscoundrel.polylinguist.data
 
 import io.github.stscoundrel.polylinguist.data.database.StatisticDao
+import io.github.stscoundrel.polylinguist.data.inmemory.InMemoryStatisticsProvider
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
@@ -8,7 +9,8 @@ import java.time.LocalDate
 
 class DefaultStatisticsRepository(
     private val networkStatisticsService: StatisticsService,
-    private val statisticsDao: StatisticDao
+    private val statisticsDao: StatisticDao,
+    private val inMemoryStatisticsProvider: InMemoryStatisticsProvider
 ) : StatisticsRepository {
     override suspend fun getCurrent(): Statistics {
         val networkStatistic = networkStatisticsService.getCurrentStatistics()
@@ -21,11 +23,12 @@ class DefaultStatisticsRepository(
         )
     }
 
-    override suspend fun getLatest(): Statistics? {
+    override suspend fun getLatest(): Statistics {
         val statistics = statisticsDao.getLatestStatistics()
 
+        // If DB result is not available, default to initial in-memory stats.
         if (statistics.isEmpty()) {
-            return null
+            return getInitialStats()
         }
 
         return Statistics(
@@ -49,6 +52,15 @@ class DefaultStatisticsRepository(
                 .map {
                     createEntityFromStatistic(it, statistic.date)
                 }
+        )
+    }
+
+    private fun getInitialStats(): Statistics {
+        val initialStats = inMemoryStatisticsProvider.getStatistics()
+
+        return Statistics(
+            date = initialStats.date,
+            statistics = initialStats.statistics.map { createStatisticFromInMemoryStatistic(it) },
         )
     }
 }

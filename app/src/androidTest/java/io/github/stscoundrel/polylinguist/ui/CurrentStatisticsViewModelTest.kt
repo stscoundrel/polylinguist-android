@@ -42,7 +42,7 @@ class InMemoryStatisticsRepository : StatisticsRepository {
         return todaysStatistics
     }
 
-    override suspend fun getLatest(): Statistics? {
+    override suspend fun getLatest(): Statistics {
         TODO("Not yet implemented")
     }
 

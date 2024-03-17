@@ -4,6 +4,7 @@ import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.github.stscoundrel.polylinguist.data.DefaultStatisticsRepository
 import io.github.stscoundrel.polylinguist.data.database.AppDatabase
+import io.github.stscoundrel.polylinguist.data.inmemory.InMemoryStatisticsProvider
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatisticsService
 import io.github.stscoundrel.polylinguist.data.network.PolylinguistHTTPService
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
@@ -50,11 +51,17 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         NetworkStatisticsService(retrofitService)
     }
 
+    private val inMemoryStatisticsProvider: InMemoryStatisticsProvider by lazy {
+        InMemoryStatisticsProvider()
+    }
+
     private val statisticsRepository: DefaultStatisticsRepository by lazy {
         DefaultStatisticsRepository(
             statisticsService,
-            AppDatabase.getDatabase(context).statisticsDao()
-        )
+            AppDatabase.getDatabase(context).statisticsDao(),
+            inMemoryStatisticsProvider,
+
+            )
     }
 
     override val getCurrentStatisticsUseCase: GetCurrentStatisticsUseCase by lazy {
