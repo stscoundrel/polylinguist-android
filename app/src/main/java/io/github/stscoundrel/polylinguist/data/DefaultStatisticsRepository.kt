@@ -21,6 +21,19 @@ class DefaultStatisticsRepository(
         )
     }
 
+    override suspend fun getLatest(): Statistics? {
+        val statistics = statisticsDao.getLatestStatistics()
+
+        if (statistics.isEmpty()) {
+            return null
+        }
+
+        return Statistics(
+            date = statistics.first().date,
+            statistics = statistics.map { createStatisticFromEntity(it) }
+        )
+    }
+
     override suspend fun getByDate(date: LocalDate): Statistics {
         val statistics = statisticsDao.getByDate(date)
 

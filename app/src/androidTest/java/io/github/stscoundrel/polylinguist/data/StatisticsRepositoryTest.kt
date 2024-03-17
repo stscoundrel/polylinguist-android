@@ -11,6 +11,9 @@ import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -79,6 +82,84 @@ class StatisticsRepositoryTest {
 
         // Should've fetched data & transformed to data model
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun getLatestWhenNoneKnownTest() = runBlocking {
+        val result = repository.getLatest()
+
+        assertNull(result)
+    }
+
+    @Test
+    fun getLatestTest() = runBlocking {
+        val date2012 = LocalDate.of(2012, 1, 1)
+        val date2020 = LocalDate.of(2020, 1, 1)
+        val date2024 = LocalDate.of(2024, 1, 1)
+
+        val initialStatistics = listOf(
+            StatisticEntity(
+                language = "Kotlin",
+                percentage = 63.0,
+                size = 1332,
+                color = "FFFFF",
+                date = date2012
+            ),
+            StatisticEntity(
+                language = "Java",
+                percentage = 36.0,
+                size = 666,
+                color = "F4F4F4",
+                date = date2012
+            ),
+            StatisticEntity(
+                language = "Scala",
+                percentage = 63.0,
+                size = 1332,
+                color = "FFFFF",
+                date = date2020
+            ),
+            StatisticEntity(
+                language = "Clojure",
+                percentage = 36.0,
+                size = 666,
+                color = "F4F4F4",
+                date = date2020
+            ),
+            StatisticEntity(
+                language = "Python",
+                percentage = 63.0,
+                size = 1332,
+                color = "FFFFF",
+                date = date2024
+            ),
+            StatisticEntity(
+                language = "Golang",
+                percentage = 36.0,
+                size = 666,
+                color = "F4F4F4",
+                date = date2024
+            ),
+        )
+
+        statisticDao.upsertAll(initialStatistics)
+
+        val result = repository.getLatest()
+
+        assertNotNull(result)
+
+        if (result != null) {
+            assertEquals(result.date, date2024)
+            assertEquals(result.statistics.size, 2)
+
+            assertTrue(
+                listOf(
+                    "Python",
+                    "Golang"
+                ).containsAll(result.statistics.map { it.language })
+            )
+        }
+
     }
 
     @Test

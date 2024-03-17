@@ -42,6 +42,10 @@ class InMemoryStatisticsRepository : StatisticsRepository {
         return todaysStatistics
     }
 
+    override suspend fun getLatest(): Statistics? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getByDate(date: LocalDate): Statistics {
         TODO("Not yet implemented")
     }

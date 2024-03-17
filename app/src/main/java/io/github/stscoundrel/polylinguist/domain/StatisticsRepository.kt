@@ -5,6 +5,8 @@ import java.time.LocalDate
 interface StatisticsRepository {
     suspend fun getCurrent(): Statistics
 
+    suspend fun getLatest(): Statistics?
+
     suspend fun getByDate(date: LocalDate): Statistics
 
     suspend fun save(statistic: Statistics)
