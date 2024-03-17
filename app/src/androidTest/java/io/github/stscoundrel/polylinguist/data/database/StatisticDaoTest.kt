@@ -225,6 +225,98 @@ class StatisticDaoTest {
     }
 
     @Test
+    fun getLatestDate() = runTest {
+        val firstOfJanuary = LocalDate.of(2013, 1, 1)
+        val secondOfJanuary = LocalDate.of(2013, 1, 2)
+        val statistics = listOf(
+            StatisticEntity(
+                language = "Kotlin",
+                percentage = 63.0,
+                size = 1260,
+                color = "FFFFF",
+                date = firstOfJanuary
+            ),
+            StatisticEntity(
+                language = "Java",
+                percentage = 36.0,
+                size = 720,
+                color = "F4F4F4",
+                date = firstOfJanuary
+            ),
+            StatisticEntity(
+                language = "PHP",
+                percentage = 50.0,
+                size = 2,
+                color = "F5F5F5",
+                date = secondOfJanuary
+            ),
+            StatisticEntity(
+                language = "Perl",
+                percentage = 50.0,
+                size = 2,
+                color = "F5F5F5",
+                date = secondOfJanuary
+            )
+        )
+
+        statisticsDao.upsertAll(statistics)
+
+        val result = statisticsDao.getLatestDate()
+
+        // Second of January is the latest date in data.
+        assertEquals(secondOfJanuary, result)
+    }
+
+    @Test
+    fun getLatestStatistics() = runTest {
+        val firstOfJanuary = LocalDate.of(2013, 1, 1)
+        val secondOfJanuary = LocalDate.of(2013, 1, 2)
+        val statistics = listOf(
+            StatisticEntity(
+                language = "Kotlin",
+                percentage = 63.0,
+                size = 1260,
+                color = "FFFFF",
+                date = firstOfJanuary
+            ),
+            StatisticEntity(
+                language = "Java",
+                percentage = 36.0,
+                size = 720,
+                color = "F4F4F4",
+                date = firstOfJanuary
+            ),
+            StatisticEntity(
+                language = "PHP",
+                percentage = 50.0,
+                size = 2,
+                color = "F5F5F5",
+                date = secondOfJanuary
+            ),
+            StatisticEntity(
+                language = "Perl",
+                percentage = 50.0,
+                size = 2,
+                color = "F5F5F5",
+                date = secondOfJanuary
+            )
+        )
+
+        statisticsDao.upsertAll(statistics)
+
+        val result = statisticsDao.getLatestStatistics()
+
+        // Two latter entities from 2nd of January
+        // should be the latest.
+        val expected = listOf(
+            statistics[2],
+            statistics[3]
+        )
+
+        assertEquals(expected, result)
+    }
+
+    @Test
     fun serializesAndDeserializesDates() = runTest {
         val date = LocalDate.of(2024, 1, 1)
         val statistic = StatisticEntity(
