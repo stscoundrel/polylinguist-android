@@ -10,7 +10,7 @@ class GetLatestStatisticsUseCase(
     private val statisticsRepository: StatisticsRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-    suspend operator fun invoke(): Statistics? = withContext(defaultDispatcher) {
+    suspend operator fun invoke(): Statistics = withContext(defaultDispatcher) {
         return@withContext statisticsRepository.getLatest()
     }
 }

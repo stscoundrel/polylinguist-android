@@ -1,6 +1,7 @@
 package io.github.stscoundrel.polylinguist.data
 
 import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
+import io.github.stscoundrel.polylinguist.data.inmemory.InMemoryStatistic
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import java.time.LocalDate
@@ -20,6 +21,15 @@ fun createStatisticFromEntity(entity: StatisticEntity): Statistic {
         size = entity.size,
         percentage = entity.percentage,
         color = entity.color,
+    )
+}
+
+fun createStatisticFromInMemoryStatistic(inMemoryStatistic: InMemoryStatistic): Statistic {
+    return Statistic(
+        language = inMemoryStatistic.language,
+        size = inMemoryStatistic.size,
+        percentage = inMemoryStatistic.percentage,
+        color = inMemoryStatistic.color,
     )
 }
 

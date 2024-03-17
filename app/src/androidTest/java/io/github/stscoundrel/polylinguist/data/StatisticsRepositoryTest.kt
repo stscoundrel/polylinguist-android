@@ -6,13 +6,12 @@ import androidx.test.core.app.ApplicationProvider
 import io.github.stscoundrel.polylinguist.data.database.AppDatabase
 import io.github.stscoundrel.polylinguist.data.database.StatisticDao
 import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
+import io.github.stscoundrel.polylinguist.data.inmemory.InMemoryStatisticsProvider
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -43,11 +42,13 @@ class InMemoryStatisticsService : StatisticsService {
 
 class StatisticsRepositoryTest {
     private lateinit var statisticDao: StatisticDao
+    private lateinit var inMemoryProvider: InMemoryStatisticsProvider
     private lateinit var repository: DefaultStatisticsRepository
 
     @Before
     fun initRepository() {
         // Setup repository with in-memory database and test double for network service.
+        // The in-memory provider of course works as-is.
 
         val database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
@@ -55,7 +56,9 @@ class StatisticsRepositoryTest {
         ).allowMainThreadQueries().build()
 
         statisticDao = database.statisticsDao()
-        repository = DefaultStatisticsRepository(InMemoryStatisticsService(), statisticDao)
+        inMemoryProvider = InMemoryStatisticsProvider()
+        repository =
+            DefaultStatisticsRepository(InMemoryStatisticsService(), statisticDao, inMemoryProvider)
     }
 
     @Test
@@ -85,10 +88,16 @@ class StatisticsRepositoryTest {
     }
 
     @Test
-    fun getLatestWhenNoneKnownTest() = runBlocking {
+    fun getLatestWhenOnlyInitialAvailableTest() = runBlocking {
+        val inMemoryResult = inMemoryProvider.getStatistics()
         val result = repository.getLatest()
 
-        assertNull(result)
+        // Should've provided results from in-memory provider instead.
+        // Any notable amount of results implies DB was not used.
+        assertTrue(result.statistics.size > 10)
+        assertEquals(result.statistics.size, inMemoryResult.statistics.size)
+
+        assertEquals(result.date, inMemoryResult.date)
     }
 
     @Test
@@ -146,20 +155,15 @@ class StatisticsRepositoryTest {
 
         val result = repository.getLatest()
 
-        assertNotNull(result)
+        assertEquals(result.date, date2024)
+        assertEquals(result.statistics.size, 2)
 
-        if (result != null) {
-            assertEquals(result.date, date2024)
-            assertEquals(result.statistics.size, 2)
-
-            assertTrue(
-                listOf(
-                    "Python",
-                    "Golang"
-                ).containsAll(result.statistics.map { it.language })
-            )
-        }
-
+        assertTrue(
+            listOf(
+                "Python",
+                "Golang"
+            ).containsAll(result.statistics.map { it.language })
+        )
     }
 
     @Test
