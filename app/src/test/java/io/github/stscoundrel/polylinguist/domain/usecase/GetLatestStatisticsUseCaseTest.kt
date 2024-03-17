@@ -1,5 +1,6 @@
 package io.github.stscoundrel.polylinguist.domain.usecase
 
+
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
@@ -9,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 
-val todaysStatistics = Statistics(
+val latestStatistics = Statistics(
     date = LocalDate.now(),
     statistics = listOf(
         Statistic(
@@ -27,15 +28,15 @@ val todaysStatistics = Statistics(
     )
 )
 
-class InMemoryStatisticsRepository : StatisticsRepository {
+class InMemoryDummyStatisticsRepository : StatisticsRepository {
     val statistics: MutableMap<LocalDate, List<Statistic>> = mutableMapOf()
 
     override suspend fun getCurrent(): Statistics {
-        return todaysStatistics
+        TODO("Not yet implemented")
     }
 
-    override suspend fun getLatest(): Statistics? {
-        TODO("Not yet implemented")
+    override suspend fun getLatest(): Statistics {
+        return latestStatistics
     }
 
     override suspend fun getByDate(date: LocalDate): Statistics {
@@ -48,24 +49,20 @@ class InMemoryStatisticsRepository : StatisticsRepository {
 
 }
 
-class GetCurrentStatisticsUseCaseTest {
-    private lateinit var repository: InMemoryStatisticsRepository
+class GetLatestStatisticsUseCaseTest {
+    private lateinit var repository: InMemoryDummyStatisticsRepository
 
     @Before
     fun initRepository() {
-        repository = InMemoryStatisticsRepository()
+        repository = InMemoryDummyStatisticsRepository()
     }
 
     @Test
-    fun getsAndStoresCurrentStatistics() = runBlocking {
-        val useCase = GetCurrentStatisticsUseCase(repository)
+    fun getsLatestStatistics() = runBlocking {
+        val useCase = GetLatestStatisticsUseCase(repository)
 
-        val currentStatistics = useCase()
+        val statistics = useCase()
 
-        // Should've returned todays stats.
-        assertEquals(todaysStatistics, currentStatistics)
-
-        // Should've stored them for later use with todays date.
-        assertEquals(repository.statistics.get(LocalDate.now()), currentStatistics.statistics)
+        assertEquals(latestStatistics, statistics)
     }
 }
