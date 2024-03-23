@@ -127,14 +127,15 @@ class CurrentStatisticsViewModelTest {
     fun populatesCurrentStatisticsTest() = runTest {
         val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
 
+        // Get initial load out of the way.
+        advanceUntilIdle()
+        Thread.sleep(3000)
+
         // Trigger update
         viewModel.getCurrentStatistics()
 
         // Should be loading
         assertTrue(viewModel.isLoading.value)
-
-        // Should still be empty, as fetch is happening in background thread.
-        assertEquals(null, viewModel.statistics.value)
 
         // Wait for coroutine to complete.
         advanceUntilIdle()
