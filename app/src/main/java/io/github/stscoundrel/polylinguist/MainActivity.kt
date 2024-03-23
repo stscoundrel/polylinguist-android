@@ -1,7 +1,6 @@
 package io.github.stscoundrel.polylinguist
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
 import io.github.stscoundrel.polylinguist.ui.CurrentStatisticsScreen
 import io.github.stscoundrel.polylinguist.ui.CurrentStatisticsViewModel
 import io.github.stscoundrel.polylinguist.ui.theme.PolylinguistTheme
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -24,15 +21,6 @@ class MainActivity : ComponentActivity() {
         val app: PolylinguistApplication = application as PolylinguistApplication
         val currentStatsUseCase = app.container.getCurrentStatisticsUseCase
         val latestStatisticsUseCase = app.container.getLatestStatisticsUseCase
-
-        // TODO: Debug only.
-        lifecycleScope.launch {
-            val stats = currentStatsUseCase()
-            Log.v("Lol", stats.date.toString())
-            for (stat in stats.statistics) {
-                Log.v("Lol", stat.toString())
-            }
-        }
 
         setContent {
             PolylinguistTheme {
