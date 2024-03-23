@@ -16,6 +16,16 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
 
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     - name: Run Android tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
