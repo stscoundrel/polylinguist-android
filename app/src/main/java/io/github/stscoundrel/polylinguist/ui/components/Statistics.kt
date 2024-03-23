@@ -13,12 +13,10 @@ import io.github.stscoundrel.polylinguist.ui.utils.formatPresentationDate
 @Composable
 fun Statistics(statistics: Statistics) {
     val sortedStats = statistics.statistics.sortedByDescending { it.percentage }
+    val largestPercentage = sortedStats.first().percentage
 
     Text(text = "Statistics for ${formatPresentationDate(statistics.date)}")
     Spacer(modifier = Modifier.height(8.dp))
-
-    val largestPercentage = statistics.statistics.maxByOrNull { it.percentage }!!
-        .percentage
 
     sortedStats.forEachIndexed { index, statistic ->
         val presentationIndex = index + 1
@@ -27,10 +25,9 @@ fun Statistics(statistics: Statistics) {
             text = "$presentationIndex. ${statistic.language} - ${roundedPercentage}%",
             modifier = Modifier.padding(bottom = 2.dp)
         )
-        HorizontalBar(
-            percentage = statistic.percentage,
+        StatisticBar(
+            statistic = statistic,
             largestPercentage = largestPercentage,
-            colorHex = statistic.color
         )
     }
 }
