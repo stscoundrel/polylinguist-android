@@ -1,9 +1,9 @@
-package io.github.stscoundrel.polylinguist.ui
+package io.github.stscoundrel.polylinguist.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.stscoundrel.polylinguist.ui.components.HorizontalBar
+import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
 import java.time.format.DateTimeFormatter
 
 
@@ -28,12 +30,16 @@ fun CurrentStatisticsScreen(
     if (statistics == null) {
         Text(text = "Loading...")
     } else {
-
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier.fillMaxWidth()
+        ) {
 
             statistics?.let { stats ->
                 Text(text = "Date: ${stats.date.format(DateTimeFormatter.ISO_DATE)}")
                 Spacer(modifier = Modifier.height(8.dp))
+
+                val largestPercentage = stats.statistics.maxByOrNull { it.percentage }!!
+                    .percentage
 
                 stats.statistics.sortedByDescending { it.percentage }
                     .forEachIndexed { index, statistic ->
@@ -42,6 +48,11 @@ fun CurrentStatisticsScreen(
                         Text(
                             text = "$presentationIndex. ${statistic.language} - ${roundedPercentage}%",
                             modifier = Modifier.padding(bottom = 2.dp)
+                        )
+                        HorizontalBar(
+                            percentage = statistic.percentage,
+                            largestPercentage = largestPercentage,
+                            colorHex = statistic.color
                         )
                     }
             }
@@ -58,5 +69,8 @@ fun CurrentStatisticsScreen(
                 }
             }
         }
+
     }
 }
+
+

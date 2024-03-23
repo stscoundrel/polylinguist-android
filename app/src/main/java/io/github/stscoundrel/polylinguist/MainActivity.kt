@@ -10,9 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.stscoundrel.polylinguist.ui.CurrentStatisticsScreen
-import io.github.stscoundrel.polylinguist.ui.CurrentStatisticsViewModel
+import io.github.stscoundrel.polylinguist.ui.screens.CurrentStatisticsScreen
 import io.github.stscoundrel.polylinguist.ui.theme.PolylinguistTheme
+import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
 
 class MainActivity : ComponentActivity() {
 
