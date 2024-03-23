@@ -1,11 +1,10 @@
 package io.github.stscoundrel.polylinguist.ui
 
-import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
-import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
 import io.github.stscoundrel.polylinguist.domain.usecase.GetCurrentStatisticsUseCase
 import io.github.stscoundrel.polylinguist.domain.usecase.GetLatestStatisticsUseCase
-import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
+import io.github.stscoundrel.polylinguist.testdata.InMemoryStatisticsRepository
+import io.github.stscoundrel.polylinguist.testdata.StatisticFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -19,53 +18,36 @@ import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 
-// TODO: these are shared with use case test class. Combine them to eventual factory/similar.
 val todaysStatistics = Statistics(
     date = LocalDate.now(),
     statistics = listOf(
-        StatisticsFactory.createStatistic(language = "Java"),
-        StatisticsFactory.createStatistic(language = "Kotlin"),
+        StatisticFactory.createStatistic(language = "Java"),
+        StatisticFactory.createStatistic(language = "Kotlin"),
     )
 )
 
 val initialStatistics = Statistics(
     date = LocalDate.of(2024, 2, 1),
     statistics = listOf(
-        StatisticsFactory.createStatistic(language = "Java"),
-        StatisticsFactory.createStatistic(language = "Kotlin"),
-        StatisticsFactory.createStatistic(language = "Scala"),
+        StatisticFactory.createStatistic(language = "Java"),
+        StatisticFactory.createStatistic(language = "Kotlin"),
+        StatisticFactory.createStatistic(language = "Scala"),
     )
 )
 
-class InMemoryStatisticsRepository : StatisticsRepository {
-    val statistics: MutableMap<LocalDate, List<Statistic>> = mutableMapOf()
-
-    override suspend fun getCurrent(): Statistics {
-        return todaysStatistics
-    }
-
-    override suspend fun getLatest(): Statistics {
-        return initialStatistics
-    }
-
-    override suspend fun getByDate(date: LocalDate): Statistics {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun save(statistic: Statistics) {
-        statistics.put(statistic.date, statistic.statistics)
-    }
-
-}
 
 class CurrentStatisticsViewModelTest {
     private lateinit var currentStatsUseCase: GetCurrentStatisticsUseCase
     private lateinit var latestStatsUseCase: GetLatestStatisticsUseCase
 
     @Before
-    fun initRepository() {
-        currentStatsUseCase = GetCurrentStatisticsUseCase(InMemoryStatisticsRepository())
-        latestStatsUseCase = GetLatestStatisticsUseCase(InMemoryStatisticsRepository())
+    fun initUseCases() {
+        val repository = InMemoryStatisticsRepository(
+            currentStatistics = todaysStatistics,
+            latestStatistics = initialStatistics
+        )
+        currentStatsUseCase = GetCurrentStatisticsUseCase(repository)
+        latestStatsUseCase = GetLatestStatisticsUseCase(repository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

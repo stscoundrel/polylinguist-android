@@ -1,9 +1,9 @@
 package io.github.stscoundrel.polylinguist.domain.usecase
 
 
-import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
-import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
+import io.github.stscoundrel.polylinguist.testdata.InMemoryStatisticsRepository
+import io.github.stscoundrel.polylinguist.testdata.StatisticFactory
 import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
@@ -14,38 +14,21 @@ import java.time.LocalDate
 val latestStatistics = Statistics(
     date = LocalDate.now(),
     statistics = listOf(
-        StatisticsFactory.createStatistic(language = "Java"),
-        StatisticsFactory.createStatistic(language = "Kotlin"),
+        StatisticFactory.createStatistic(language = "Java"),
+        StatisticFactory.createStatistic(language = "Kotlin"),
     )
 )
 
-class InMemoryDummyStatisticsRepository : StatisticsRepository {
-    val statistics: MutableMap<LocalDate, List<Statistic>> = mutableMapOf()
-
-    override suspend fun getCurrent(): Statistics {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getLatest(): Statistics {
-        return latestStatistics
-    }
-
-    override suspend fun getByDate(date: LocalDate): Statistics {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun save(statistic: Statistics) {
-        statistics.put(statistic.date, statistic.statistics)
-    }
-
-}
 
 class GetLatestStatisticsUseCaseTest {
-    private lateinit var repository: InMemoryDummyStatisticsRepository
+    private lateinit var repository: InMemoryStatisticsRepository
 
     @Before
     fun initRepository() {
-        repository = InMemoryDummyStatisticsRepository()
+        repository = InMemoryStatisticsRepository(
+            latestStatistics = latestStatistics,
+            currentStatistics = StatisticsFactory.createStatistics()
+        )
     }
 
     @Test
