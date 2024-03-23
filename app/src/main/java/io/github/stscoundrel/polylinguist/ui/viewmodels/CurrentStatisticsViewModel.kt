@@ -1,4 +1,4 @@
-package io.github.stscoundrel.polylinguist.ui
+package io.github.stscoundrel.polylinguist.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
