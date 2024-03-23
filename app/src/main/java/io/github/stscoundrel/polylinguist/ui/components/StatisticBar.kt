@@ -21,13 +21,14 @@ fun StatisticBar(
     modifier: Modifier = Modifier
 ) {
     val clampedPercentage = (statistic.percentage / largestPercentage).coerceIn(0.0, 1.0)
+    val visibilityThreshold = 0.02.toFloat()
 
     Box(
         modifier = modifier
             .height(10.dp)
             .padding(10.dp, 0.dp)
             .clip(shape = RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
-            .fillMaxWidth(clampedPercentage.toFloat())
+            .fillMaxWidth(clampedPercentage.toFloat() + visibilityThreshold)
             .background(createColorFromHex(statistic.color))
     )
     Spacer(modifier = modifier.height(8.dp))
