@@ -38,17 +38,15 @@ val initialStatistics = Statistics(
 
 
 class CurrentStatisticsViewModelTest {
-    private lateinit var currentStatsUseCase: GetCurrentStatisticsUseCase
-    private lateinit var latestStatsUseCase: GetLatestStatisticsUseCase
-
-    @Before
-    fun initUseCases() {
+    private fun getViewModel(): CurrentStatisticsViewModel {
         val repository = InMemoryStatisticsRepository(
             currentStatistics = todaysStatistics,
             latestStatistics = initialStatistics
         )
-        currentStatsUseCase = GetCurrentStatisticsUseCase(repository)
-        latestStatsUseCase = GetLatestStatisticsUseCase(repository)
+        val currentStatsUseCase = GetCurrentStatisticsUseCase(repository)
+        val latestStatsUseCase = GetLatestStatisticsUseCase(repository)
+
+        return CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -60,7 +58,7 @@ class CurrentStatisticsViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun populatesInitialStatisticsTest() = runTest {
-        val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
+        val viewModel = getViewModel()
 
         // Initially empty stats.
         assertEquals(null, viewModel.statistics.value)
@@ -84,7 +82,7 @@ class CurrentStatisticsViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun populatesCurrentStatisticsTest() = runTest {
-        val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
+        val viewModel = getViewModel()
 
         // Get initial load out of the way.
         advanceUntilIdle()
@@ -112,7 +110,7 @@ class CurrentStatisticsViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun hasLatestStatisticsTest() = runTest {
-        val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
+        val viewModel = getViewModel()
 
         // Wait for load to complete, should fetch initial stats.
         advanceUntilIdle()
