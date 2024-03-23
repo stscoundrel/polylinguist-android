@@ -1,11 +1,10 @@
-package io.github.stscoundrel.polylinguist.ui
+package io.github.stscoundrel.polylinguist.ui.viewmodels
 
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.usecase.GetCurrentStatisticsUseCase
 import io.github.stscoundrel.polylinguist.domain.usecase.GetLatestStatisticsUseCase
 import io.github.stscoundrel.polylinguist.testdata.InMemoryStatisticsRepository
 import io.github.stscoundrel.polylinguist.testdata.StatisticFactory
-import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
