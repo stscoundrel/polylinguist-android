@@ -32,7 +32,6 @@ fun CurrentStatisticsScreen(
         Column(modifier = Modifier.fillMaxSize()) {
 
             statistics?.let { stats ->
-                // Render statistics data
                 Text(text = "Date: ${stats.date.format(DateTimeFormatter.ISO_DATE)}")
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -47,13 +46,15 @@ fun CurrentStatisticsScreen(
                     }
             }
 
-            Row {
-                Button(onClick = { statsViewModel.getCurrentStatistics() }) {
-                    Text(text = "Update")
-                }
+            if (!statsViewModel.hasUpToDateStatistics()) {
+                Row {
+                    Button(onClick = { statsViewModel.getCurrentStatistics() }) {
+                        Text(text = "Update")
+                    }
 
-                if (isLoading) {
-                    Text(text = "LOADING!")
+                    if (isLoading) {
+                        Text(text = "LOADING!")
+                    }
                 }
             }
         }

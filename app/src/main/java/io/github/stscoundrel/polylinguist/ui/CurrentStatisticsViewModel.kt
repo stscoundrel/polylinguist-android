@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class CurrentStatisticsViewModel(
     private val getCurrentStatisticsUseCase: GetCurrentStatisticsUseCase,
@@ -19,6 +20,7 @@ class CurrentStatisticsViewModel(
 ) : ViewModel() {
     private val _statistics = MutableStateFlow<Statistics?>(null)
     private val _isLoading = MutableStateFlow<Boolean>(false)
+    private val currentDate = LocalDate.now()
     val statistics: StateFlow<Statistics?> = _statistics.asStateFlow()
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -32,6 +34,14 @@ class CurrentStatisticsViewModel(
 
     private fun setIsNotLoading() {
         _isLoading.value = false
+    }
+
+    fun hasUpToDateStatistics(): Boolean {
+        if (statistics.value != null) {
+            return statistics.value!!.date == currentDate
+        }
+
+        return false
     }
 
     fun getLatestStatistics() {

@@ -38,7 +38,7 @@ val todaysStatistics = Statistics(
 )
 
 val initialStatistics = Statistics(
-    date = LocalDate.now(),
+    date = LocalDate.of(2024, 2, 1),
     statistics = listOf(
         Statistic(
             language = "Java",
@@ -147,6 +147,32 @@ class CurrentStatisticsViewModelTest {
 
         // Should now contain statistics in the state.
         assertEquals(todaysStatistics, viewModel.statistics.value)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun hasLatestStatisticsTest() = runTest {
+        val viewModel = CurrentStatisticsViewModel(currentStatsUseCase, latestStatsUseCase)
+
+        // Wait for load to complete, should fetch initial stats.
+        advanceUntilIdle()
+
+        // Should not have latest stats out-of-the-box.
+        val initialResult = viewModel.hasUpToDateStatistics()
+
+        assertFalse(initialResult)
+
+        // Trigger update
+        viewModel.getCurrentStatistics()
+        advanceUntilIdle()
+
+        // Allow time for CI flakiness.
+        Thread.sleep(3000)
+
+        // Should now have latest stats.
+        val result = viewModel.hasUpToDateStatistics()
+
+        assertTrue(result)
     }
 
 }
