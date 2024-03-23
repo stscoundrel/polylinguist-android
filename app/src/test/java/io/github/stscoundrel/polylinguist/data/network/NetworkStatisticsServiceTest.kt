@@ -1,5 +1,6 @@
 package io.github.stscoundrel.polylinguist.data.network
 
+import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -18,15 +19,8 @@ class NetworkStatisticsServiceTest {
     @Test
     fun getCurrentStatisticsTest() = runBlocking {
         val responseList = listOf(
-            NetworkStatistic(
-                language = "Java", percentage = 2.083404634958113, color = "#b07219", size = 54178,
-            ),
-            NetworkStatistic(
-                language = "Kotlin",
-                percentage = 2.755940787285302,
-                color = "#A97BFF",
-                size = 89221,
-            ),
+            StatisticsFactory.createNetworkStatistic(language = "Java", size = 2000),
+            StatisticsFactory.createNetworkStatistic(language = "Kotlin", size = 4000),
         )
 
         // Mock HTTP service response.

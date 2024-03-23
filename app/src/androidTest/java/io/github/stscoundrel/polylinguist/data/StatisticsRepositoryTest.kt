@@ -5,12 +5,12 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import io.github.stscoundrel.polylinguist.data.database.AppDatabase
 import io.github.stscoundrel.polylinguist.data.database.StatisticDao
-import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
 import io.github.stscoundrel.polylinguist.data.inmemory.InMemoryStatisticsProvider
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
+import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
@@ -107,46 +107,28 @@ class StatisticsRepositoryTest {
         val date2024 = LocalDate.of(2024, 1, 1)
 
         val initialStatistics = listOf(
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Kotlin",
-                percentage = 63.0,
-                size = 1332,
-                color = "FFFFF",
                 date = date2012
             ),
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Java",
-                percentage = 36.0,
-                size = 666,
-                color = "F4F4F4",
                 date = date2012
             ),
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Scala",
-                percentage = 63.0,
-                size = 1332,
-                color = "FFFFF",
                 date = date2020
             ),
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Clojure",
-                percentage = 36.0,
-                size = 666,
-                color = "F4F4F4",
                 date = date2020
             ),
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Python",
-                percentage = 63.0,
-                size = 1332,
-                color = "FFFFF",
                 date = date2024
             ),
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Golang",
-                percentage = 36.0,
-                size = 666,
-                color = "F4F4F4",
                 date = date2024
             ),
         )
@@ -172,18 +154,12 @@ class StatisticsRepositoryTest {
 
         // Populate given days stats to be found in database.
         val initialStatistics = listOf(
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Kotlin",
-                percentage = 63.0,
-                size = 1332,
-                color = "FFFFF",
                 date = date
             ),
-            StatisticEntity(
+            StatisticsFactory.createStatisticEntity(
                 language = "Java",
-                percentage = 36.0,
-                size = 666,
-                color = "F4F4F4",
                 date = date
             ),
         )
@@ -208,16 +184,12 @@ class StatisticsRepositoryTest {
         val statistics = Statistics(
             date = LocalDate.of(1989, 7, 30),
             statistics = listOf(
-                Statistic(
+                StatisticsFactory.createStatistic(
                     language = "Cobol",
-                    color = "00000",
-                    size = 1000,
                     percentage = 50.0,
                 ),
-                Statistic(
+                StatisticsFactory.createStatistic(
                     language = "Fortran",
-                    color = "FFFFFF",
-                    size = 1000,
                     percentage = 50.0,
                 ),
             )
