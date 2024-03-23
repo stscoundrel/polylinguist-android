@@ -4,6 +4,7 @@ package io.github.stscoundrel.polylinguist.domain.usecase
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
+import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -13,18 +14,8 @@ import java.time.LocalDate
 val latestStatistics = Statistics(
     date = LocalDate.now(),
     statistics = listOf(
-        Statistic(
-            language = "Java",
-            percentage = 66.6,
-            size = 1332,
-            color = "#F3F3F3"
-        ),
-        Statistic(
-            language = "Kotlin",
-            percentage = 33.3,
-            size = 666,
-            color = "#F4F4F4"
-        )
+        StatisticsFactory.createStatistic(language = "Java"),
+        StatisticsFactory.createStatistic(language = "Kotlin"),
     )
 )
 

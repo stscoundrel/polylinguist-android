@@ -5,6 +5,7 @@ import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
 import io.github.stscoundrel.polylinguist.domain.usecase.GetCurrentStatisticsUseCase
 import io.github.stscoundrel.polylinguist.domain.usecase.GetLatestStatisticsUseCase
+import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -22,42 +23,17 @@ import java.time.LocalDate
 val todaysStatistics = Statistics(
     date = LocalDate.now(),
     statistics = listOf(
-        Statistic(
-            language = "Java",
-            percentage = 66.6,
-            size = 1332,
-            color = "#F3F3F3"
-        ),
-        Statistic(
-            language = "Kotlin",
-            percentage = 33.3,
-            size = 666,
-            color = "#F4F4F4"
-        )
+        StatisticsFactory.createStatistic(language = "Java"),
+        StatisticsFactory.createStatistic(language = "Kotlin"),
     )
 )
 
 val initialStatistics = Statistics(
     date = LocalDate.of(2024, 2, 1),
     statistics = listOf(
-        Statistic(
-            language = "Java",
-            percentage = 66.0,
-            size = 1332,
-            color = "#F3F3F3"
-        ),
-        Statistic(
-            language = "Kotlin",
-            percentage = 33.0,
-            size = 666,
-            color = "#F4F4F4"
-        ),
-        Statistic(
-            language = "Scala",
-            percentage = 1.0,
-            size = 1,
-            color = "#F4F4F4"
-        ),
+        StatisticsFactory.createStatistic(language = "Java"),
+        StatisticsFactory.createStatistic(language = "Kotlin"),
+        StatisticsFactory.createStatistic(language = "Scala"),
     )
 )
 
