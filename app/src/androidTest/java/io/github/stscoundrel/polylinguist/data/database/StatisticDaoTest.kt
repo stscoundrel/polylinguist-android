@@ -2,7 +2,7 @@ package io.github.stscoundrel.polylinguist.data.database
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
+import io.github.stscoundrel.polylinguist.testdata.StatisticFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
@@ -31,11 +31,11 @@ class StatisticDaoTest {
         assertEquals(0, initialStatistics.size)
 
 
-        val statistic1 = StatisticsFactory.createStatisticEntity(
+        val statistic1 = StatisticFactory.createStatisticEntity(
             language = "Java",
         )
 
-        val statistic2 = StatisticsFactory.createStatisticEntity(
+        val statistic2 = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
         )
 
@@ -51,11 +51,11 @@ class StatisticDaoTest {
 
     @Test
     fun insertManyAndGetStatistics() = runTest {
-        val statistic1 = StatisticsFactory.createStatisticEntity(
+        val statistic1 = StatisticFactory.createStatisticEntity(
             language = "Java",
         )
 
-        val statistic2 = StatisticsFactory.createStatisticEntity(
+        val statistic2 = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
         )
 
@@ -69,14 +69,14 @@ class StatisticDaoTest {
 
     @Test
     fun updateStatistics() = runTest {
-        val initialStatistic = StatisticsFactory.createStatisticEntity(
+        val initialStatistic = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
             percentage = 63.3,
             date = LocalDate.of(2024, 1, 1)
 
         )
 
-        val changedStatistic = StatisticsFactory.createStatisticEntity(
+        val changedStatistic = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
             percentage = 89.0,
             date = LocalDate.of(2024, 1, 1)
@@ -102,14 +102,14 @@ class StatisticDaoTest {
 
     @Test
     fun updateManyStatistics() = runTest {
-        val statistic1 = StatisticsFactory.createStatisticEntity(
+        val statistic1 = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
             percentage = 63.3,
             size = 1260,
             date = LocalDate.of(2024, 1, 1)
         )
 
-        val statistic2 = StatisticsFactory.createStatisticEntity(
+        val statistic2 = StatisticFactory.createStatisticEntity(
             language = "Java",
             percentage = 36.7,
             size = 734,
@@ -138,7 +138,7 @@ class StatisticDaoTest {
 
     @Test
     fun deleteStatistics() = runTest {
-        val statistic = StatisticsFactory.createStatisticEntity(
+        val statistic = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
         )
 
@@ -161,15 +161,15 @@ class StatisticDaoTest {
     @Test
     fun getByDate() = runTest {
         val initialStatistics = listOf(
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Kotlin",
                 date = LocalDate.of(2024, 1, 1)
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Java",
                 date = LocalDate.of(2024, 1, 1)
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "PHP",
                 date = LocalDate.of(2011, 1, 1)
             )
@@ -192,19 +192,19 @@ class StatisticDaoTest {
         val firstOfJanuary = LocalDate.of(2013, 1, 1)
         val secondOfJanuary = LocalDate.of(2013, 1, 2)
         val statistics = listOf(
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Kotlin",
                 date = firstOfJanuary
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Java",
                 date = firstOfJanuary
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "PHP",
                 date = secondOfJanuary
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Perl",
                 date = secondOfJanuary
             )
@@ -223,19 +223,19 @@ class StatisticDaoTest {
         val firstOfJanuary = LocalDate.of(2013, 1, 1)
         val secondOfJanuary = LocalDate.of(2013, 1, 2)
         val statistics = listOf(
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Kotlin",
                 date = firstOfJanuary
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Java",
                 date = firstOfJanuary
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "PHP",
                 date = secondOfJanuary
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Perl",
                 date = secondOfJanuary
             )
@@ -258,7 +258,7 @@ class StatisticDaoTest {
     @Test
     fun serializesAndDeserializesDates() = runTest {
         val date = LocalDate.of(2024, 1, 1)
-        val statistic = StatisticsFactory.createStatisticEntity(
+        val statistic = StatisticFactory.createStatisticEntity(
             language = "Kotlin",
             date = date
         )

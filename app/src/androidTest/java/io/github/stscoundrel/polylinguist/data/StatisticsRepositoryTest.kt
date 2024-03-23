@@ -10,7 +10,7 @@ import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
-import io.github.stscoundrel.polylinguist.testdata.StatisticsFactory
+import io.github.stscoundrel.polylinguist.testdata.StatisticFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
@@ -107,27 +107,27 @@ class StatisticsRepositoryTest {
         val date2024 = LocalDate.of(2024, 1, 1)
 
         val initialStatistics = listOf(
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Kotlin",
                 date = date2012
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Java",
                 date = date2012
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Scala",
                 date = date2020
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Clojure",
                 date = date2020
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Python",
                 date = date2024
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Golang",
                 date = date2024
             ),
@@ -154,11 +154,11 @@ class StatisticsRepositoryTest {
 
         // Populate given days stats to be found in database.
         val initialStatistics = listOf(
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Kotlin",
                 date = date
             ),
-            StatisticsFactory.createStatisticEntity(
+            StatisticFactory.createStatisticEntity(
                 language = "Java",
                 date = date
             ),
@@ -184,11 +184,11 @@ class StatisticsRepositoryTest {
         val statistics = Statistics(
             date = LocalDate.of(1989, 7, 30),
             statistics = listOf(
-                StatisticsFactory.createStatistic(
+                StatisticFactory.createStatistic(
                     language = "Cobol",
                     percentage = 50.0,
                 ),
-                StatisticsFactory.createStatistic(
+                StatisticFactory.createStatistic(
                     language = "Fortran",
                     percentage = 50.0,
                 ),
