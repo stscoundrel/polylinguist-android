@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.stscoundrel.polylinguist.ui.components.HorizontalBar
+import io.github.stscoundrel.polylinguist.ui.utils.formatPresentationDate
 import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
-import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -35,7 +35,7 @@ fun CurrentStatisticsScreen(
         ) {
 
             statistics?.let { stats ->
-                Text(text = "Date: ${stats.date.format(DateTimeFormatter.ISO_DATE)}")
+                Text(text = "Date: ${formatPresentationDate(stats.date)}")
                 Spacer(modifier = Modifier.height(8.dp))
 
                 val largestPercentage = stats.statistics.maxByOrNull { it.percentage }!!
