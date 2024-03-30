@@ -12,6 +12,13 @@ class DefaultStatisticsRepository(
     private val statisticsDao: StatisticDao,
     private val inMemoryStatisticsProvider: InMemoryStatisticsProvider
 ) : StatisticsRepository {
+    override suspend fun getHistory(): List<Statistics> {
+        val initialStatistics = getInitialStats()
+        val dbStatisticsLists = createStatisticsListFromStatisticEntries(statisticsDao.getAll())
+
+        return dbStatisticsLists + initialStatistics
+    }
+
     override suspend fun getCurrent(): Statistics {
         val networkStatistic = networkStatisticsService.getCurrentStatistics()
 

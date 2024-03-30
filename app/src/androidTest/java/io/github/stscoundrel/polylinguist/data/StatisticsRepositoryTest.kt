@@ -180,6 +180,94 @@ class StatisticsRepositoryTest {
     }
 
     @Test
+    fun getHistoryTest() = runBlocking {
+        val date2012 = LocalDate.of(2012, 1, 1)
+        val date2020 = LocalDate.of(2020, 1, 1)
+        val date2024 = LocalDate.of(2024, 1, 1)
+
+        val initialStatistics = listOf(
+            StatisticFactory.createStatisticEntity(
+                language = "Kotlin",
+                date = date2012
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Java",
+                date = date2012
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Kotlin",
+                date = date2020
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Java",
+                date = date2020
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Kotlin",
+                date = date2024
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Java",
+                date = date2024
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Golang",
+                date = date2024
+            ),
+        )
+
+        statisticDao.upsertAll(initialStatistics)
+
+        val result = repository.getHistory()
+
+        // Statistics for 4 days. 3 from DB, one from initial stats.
+        assertEquals(4, result.size)
+
+        val expected2012 = Statistics(
+            date = date2012,
+            statistics = listOf(
+                StatisticFactory.createStatistic(
+                    language = "Kotlin",
+                ),
+                StatisticFactory.createStatistic(
+                    language = "Java",
+                )
+            )
+        )
+
+        val expected2020 = Statistics(
+            date = date2020,
+            statistics = listOf(
+                StatisticFactory.createStatistic(
+                    language = "Kotlin",
+                ),
+                StatisticFactory.createStatistic(
+                    language = "Java",
+                )
+            )
+        )
+
+        val expected2024 = Statistics(
+            date = date2024,
+            statistics = listOf(
+                StatisticFactory.createStatistic(
+                    language = "Kotlin",
+                ),
+                StatisticFactory.createStatistic(
+                    language = "Java",
+                ),
+                StatisticFactory.createStatistic(
+                    language = "Golang",
+                )
+            )
+        )
+
+        assertEquals(expected2012, result.first())
+        assertEquals(expected2020, result[1])
+        assertEquals(expected2024, result[2])
+    }
+
+    @Test
     fun saveTest() = runBlocking {
         val statistics = Statistics(
             date = LocalDate.of(1989, 7, 30),
