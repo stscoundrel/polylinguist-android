@@ -3,6 +3,7 @@ package io.github.stscoundrel.polylinguist.domain
 import java.time.LocalDate
 
 interface StatisticsRepository {
+    suspend fun getHistory(): List<Statistics>
     suspend fun getCurrent(): Statistics
 
     suspend fun getLatest(): Statistics

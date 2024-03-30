@@ -4,6 +4,7 @@ import io.github.stscoundrel.polylinguist.data.database.StatisticEntity
 import io.github.stscoundrel.polylinguist.data.inmemory.InMemoryStatistic
 import io.github.stscoundrel.polylinguist.data.network.NetworkStatistic
 import io.github.stscoundrel.polylinguist.domain.Statistic
+import io.github.stscoundrel.polylinguist.domain.Statistics
 import java.time.LocalDate
 
 fun createStatisticFromNetWorkStatistic(networkStatistic: NetworkStatistic): Statistic {
@@ -41,4 +42,23 @@ fun createEntityFromStatistic(statistic: Statistic, date: LocalDate): StatisticE
         color = statistic.color,
         date = date,
     )
+}
+
+fun createStatisticsListFromStatisticEntries(statistics: List<StatisticEntity>): List<Statistics> {
+    val datesMap: MutableMap<LocalDate, MutableList<Statistic>> = mutableMapOf()
+
+    statistics.forEach {
+        if (!datesMap.containsKey(it.date)) {
+            datesMap[it.date] = mutableListOf()
+        }
+
+        datesMap[it.date]?.add(createStatisticFromEntity(it))
+    }
+
+    return datesMap.map {
+        Statistics(
+            date = it.key,
+            statistics = it.value,
+        )
+    }
 }
