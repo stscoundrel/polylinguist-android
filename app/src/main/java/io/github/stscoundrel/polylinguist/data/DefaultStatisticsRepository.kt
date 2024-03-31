@@ -12,11 +12,16 @@ class DefaultStatisticsRepository(
     private val statisticsDao: StatisticDao,
     private val inMemoryStatisticsProvider: InMemoryStatisticsProvider
 ) : StatisticsRepository {
-    override suspend fun getHistory(): List<Statistics> {
+    override suspend fun getHistory(startDate: LocalDate, endDate: LocalDate): List<Statistics> {
         val initialStatistics = getInitialStats()
-        val dbStatisticsLists = createStatisticsListFromStatisticEntries(statisticsDao.getAll())
+        val dbStatisticsLists =
+            createStatisticsListFromStatisticEntries(statisticsDao.getByDates(startDate, endDate))
 
-        return dbStatisticsLists + initialStatistics
+        if (initialStatistics.date in startDate..endDate) {
+            return dbStatisticsLists + initialStatistics
+        }
+
+        return dbStatisticsLists
     }
 
     override suspend fun getCurrent(): Statistics {

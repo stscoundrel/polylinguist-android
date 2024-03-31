@@ -23,6 +23,9 @@ interface StatisticDao {
     @Query("SELECT * FROM statistics WHERE date = :date")
     fun getByDate(date: LocalDate): List<StatisticEntity>
 
+    @Query("SELECT * FROM statistics WHERE date >= :startDate AND date <= :endDate")
+    fun getByDates(startDate: LocalDate, endDate: LocalDate): List<StatisticEntity>
+
     @Query("SELECT * FROM statistics WHERE date = (SELECT MAX(date) FROM statistics)")
     fun getLatestStatistics(): List<StatisticEntity>
 

@@ -180,7 +180,7 @@ class StatisticsRepositoryTest {
     }
 
     @Test
-    fun getHistoryTest() = runBlocking {
+    fun getFullHistoryTest() = runBlocking {
         val date2012 = LocalDate.of(2012, 1, 1)
         val date2020 = LocalDate.of(2020, 1, 1)
         val date2024 = LocalDate.of(2024, 1, 1)
@@ -218,7 +218,8 @@ class StatisticsRepositoryTest {
 
         statisticDao.upsertAll(initialStatistics)
 
-        val result = repository.getHistory()
+        // Range to fetch all results.
+        val result = repository.getHistory(startDate = date2012, endDate = LocalDate.now())
 
         // Statistics for 4 days. 3 from DB, one from initial stats.
         assertEquals(4, result.size)
@@ -227,11 +228,11 @@ class StatisticsRepositoryTest {
             date = date2012,
             statistics = listOf(
                 StatisticFactory.createStatistic(
-                    language = "Kotlin",
+                    language = "Java",
                 ),
                 StatisticFactory.createStatistic(
-                    language = "Java",
-                )
+                    language = "Kotlin",
+                ),
             )
         )
 
@@ -239,11 +240,11 @@ class StatisticsRepositoryTest {
             date = date2020,
             statistics = listOf(
                 StatisticFactory.createStatistic(
-                    language = "Kotlin",
+                    language = "Java",
                 ),
                 StatisticFactory.createStatistic(
-                    language = "Java",
-                )
+                    language = "Kotlin",
+                ),
             )
         )
 
@@ -251,20 +252,72 @@ class StatisticsRepositoryTest {
             date = date2024,
             statistics = listOf(
                 StatisticFactory.createStatistic(
-                    language = "Kotlin",
+                    language = "Golang",
                 ),
                 StatisticFactory.createStatistic(
                     language = "Java",
                 ),
                 StatisticFactory.createStatistic(
-                    language = "Golang",
-                )
+                    language = "Kotlin",
+                ),
             )
         )
 
         assertEquals(expected2012, result.first())
         assertEquals(expected2020, result[1])
         assertEquals(expected2024, result[2])
+
+    }
+
+    @Test
+    fun getPartialHistoryTest() = runBlocking {
+        val date2012 = LocalDate.of(2012, 1, 1)
+        val date2020 = LocalDate.of(2020, 1, 1)
+        val date2024 = LocalDate.of(2024, 1, 1)
+
+        val initialStatistics = listOf(
+            StatisticFactory.createStatisticEntity(
+                language = "Kotlin",
+                date = date2012
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Java",
+                date = date2012
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Kotlin",
+                date = date2020
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Java",
+                date = date2020
+            ),
+            // These 2024 entries should not appear in results.
+            StatisticFactory.createStatisticEntity(
+                language = "Kotlin",
+                date = date2024
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Java",
+                date = date2024
+            ),
+            StatisticFactory.createStatisticEntity(
+                language = "Golang",
+                date = date2024
+            ),
+        )
+
+        statisticDao.upsertAll(initialStatistics)
+
+        // Range to partial results
+        val result = repository.getHistory(startDate = date2012, endDate = date2020)
+
+        // Statistics for 2 days. 2 from DB, zero from initial stats.
+        assertEquals(2, result.size)
+
+        assertEquals(date2012, result.first().date)
+        assertEquals(date2020, result[1].date)
+
     }
 
     @Test
