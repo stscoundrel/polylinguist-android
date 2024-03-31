@@ -11,7 +11,9 @@ class InMemoryStatisticsRepository(
 ) : StatisticsRepository {
     val statistics: MutableMap<LocalDate, List<Statistic>> = mutableMapOf()
     override suspend fun getHistory(startDate: LocalDate, endDate: LocalDate): List<Statistics> {
-        TODO("Not yet implemented")
+        return statistics
+            .filterKeys { it in startDate..endDate }
+            .map { (date, stats) -> Statistics(date = date, statistics = stats) }
     }
 
     override suspend fun getCurrent(): Statistics {
@@ -28,5 +30,9 @@ class InMemoryStatisticsRepository(
 
     override suspend fun save(statistic: Statistics) {
         statistics.put(statistic.date, statistic.statistics)
+    }
+
+    fun setTestStats(stats: List<Statistics>) {
+        stats.forEach { statistics[it.date] = it.statistics }
     }
 }

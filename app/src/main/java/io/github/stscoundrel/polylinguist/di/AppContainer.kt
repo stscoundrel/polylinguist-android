@@ -10,6 +10,7 @@ import io.github.stscoundrel.polylinguist.data.network.PolylinguistHTTPService
 import io.github.stscoundrel.polylinguist.data.network.StatisticsService
 import io.github.stscoundrel.polylinguist.domain.usecase.GetCurrentStatisticsUseCase
 import io.github.stscoundrel.polylinguist.domain.usecase.GetLatestStatisticsUseCase
+import io.github.stscoundrel.polylinguist.domain.usecase.GetStatisticsHistoryUseCase
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
@@ -18,9 +19,9 @@ import retrofit2.Retrofit
  * Dependency Injection container at the application level.
  */
 interface AppContainer {
-    // TODO: debug only
     val getCurrentStatisticsUseCase: GetCurrentStatisticsUseCase
     val getLatestStatisticsUseCase: GetLatestStatisticsUseCase
+    val getStatisticsHistoryUseCase: GetStatisticsHistoryUseCase
 }
 
 /**
@@ -72,5 +73,9 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val getLatestStatisticsUseCase: GetLatestStatisticsUseCase by lazy {
         GetLatestStatisticsUseCase(statisticsRepository)
+    }
+
+    override val getStatisticsHistoryUseCase: GetStatisticsHistoryUseCase by lazy {
+        GetStatisticsHistoryUseCase(statisticsRepository)
     }
 }
