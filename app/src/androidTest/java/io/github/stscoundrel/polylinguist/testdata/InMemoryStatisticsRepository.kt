@@ -3,7 +3,6 @@ package io.github.stscoundrel.polylinguist.testdata
 import io.github.stscoundrel.polylinguist.domain.Statistic
 import io.github.stscoundrel.polylinguist.domain.Statistics
 import io.github.stscoundrel.polylinguist.domain.StatisticsRepository
-import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 class InMemoryStatisticsRepository(
@@ -11,18 +10,17 @@ class InMemoryStatisticsRepository(
     private val currentStatistics: Statistics,
 ) : StatisticsRepository {
     val statistics: MutableMap<LocalDate, List<Statistic>> = mutableMapOf()
-
     override suspend fun getHistory(startDate: LocalDate, endDate: LocalDate): List<Statistics> {
-        TODO("Not yet implemented")
+        return statistics
+            .filterKeys { it in startDate..endDate }
+            .map { (date, stats) -> Statistics(date = date, statistics = stats) }
     }
 
     override suspend fun getCurrent(): Statistics {
-        delay(1500)
         return currentStatistics
     }
 
     override suspend fun getLatest(): Statistics {
-        delay(1500)
         return latestStatistics
     }
 
@@ -32,5 +30,9 @@ class InMemoryStatisticsRepository(
 
     override suspend fun save(statistic: Statistics) {
         statistics.put(statistic.date, statistic.statistics)
+    }
+
+    fun setTestStats(stats: List<Statistics>) {
+        stats.forEach { statistics[it.date] = it.statistics }
     }
 }
