@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.stscoundrel.polylinguist.ui.screens.CurrentStatisticsScreen
+import io.github.stscoundrel.polylinguist.ui.screens.StatisticsHistoryScreen
 import io.github.stscoundrel.polylinguist.ui.theme.PolylinguistTheme
 import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
+import io.github.stscoundrel.polylinguist.ui.viewmodels.StatisticsHistoryViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -21,20 +23,29 @@ class MainActivity : ComponentActivity() {
         val app: PolylinguistApplication = application as PolylinguistApplication
         val currentStatsUseCase = app.container.getCurrentStatisticsUseCase
         val latestStatisticsUseCase = app.container.getLatestStatisticsUseCase
+        val statisticsHistoryUseCase = app.container.getStatisticsHistoryUseCase
 
         setContent {
             PolylinguistTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CurrentStatisticsScreen(
-                        CurrentStatisticsViewModel(
-                            currentStatsUseCase,
-                            latestStatisticsUseCase
+                    val renderHistoryScreen = false
+                    if (renderHistoryScreen) {
+                        StatisticsHistoryScreen(
+                            StatisticsHistoryViewModel(
+                                statisticsHistoryUseCase
+                            )
                         )
-                    )
+                    } else {
+                        CurrentStatisticsScreen(
+                            CurrentStatisticsViewModel(
+                                currentStatsUseCase,
+                                latestStatisticsUseCase
+                            )
+                        )
+                    }
                 }
             }
         }
