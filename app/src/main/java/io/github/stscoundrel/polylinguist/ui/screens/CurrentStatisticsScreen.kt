@@ -15,24 +15,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import io.github.stscoundrel.polylinguist.ui.NavigationRoutes
+import io.github.stscoundrel.polylinguist.ui.components.HeadingText
 import io.github.stscoundrel.polylinguist.ui.components.LoadingSpinner
+import io.github.stscoundrel.polylinguist.ui.components.NavigationButton
 import io.github.stscoundrel.polylinguist.ui.components.Statistics
 import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
 
 
 @Composable
 fun CurrentStatisticsScreen(
+    navController: NavHostController,
     statsViewModel: CurrentStatisticsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val statistics by statsViewModel.statistics.collectAsState()
     val isLoading by statsViewModel.isLoading.collectAsState()
 
-
-
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
+        HeadingText("Current Statistics")
+
         if (statistics == null) {
             LoadingSpinner()
         }
@@ -61,6 +66,12 @@ fun CurrentStatisticsScreen(
 
         }
 
+        NavigationButton(
+            navController,
+            "Statistics History",
+            NavigationRoutes.StatisticsHistory.route
+        )
+
         if (isLoading) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -72,8 +83,6 @@ fun CurrentStatisticsScreen(
             }
         }
     }
-
-
 }
 
 

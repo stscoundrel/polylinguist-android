@@ -10,8 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.stscoundrel.polylinguist.ui.screens.CurrentStatisticsScreen
-import io.github.stscoundrel.polylinguist.ui.screens.StatisticsHistoryScreen
+import androidx.navigation.compose.rememberNavController
+import io.github.stscoundrel.polylinguist.ui.Navigation
 import io.github.stscoundrel.polylinguist.ui.theme.PolylinguistTheme
 import io.github.stscoundrel.polylinguist.ui.viewmodels.CurrentStatisticsViewModel
 import io.github.stscoundrel.polylinguist.ui.viewmodels.StatisticsHistoryViewModel
@@ -25,27 +25,26 @@ class MainActivity : ComponentActivity() {
         val latestStatisticsUseCase = app.container.getLatestStatisticsUseCase
         val statisticsHistoryUseCase = app.container.getStatisticsHistoryUseCase
 
+        val currentStatsViewModel = CurrentStatisticsViewModel(
+            currentStatsUseCase,
+            latestStatisticsUseCase
+        )
+        val historyViewModel = StatisticsHistoryViewModel(
+            statisticsHistoryUseCase
+        )
+
         setContent {
             PolylinguistTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val renderHistoryScreen = false
-                    if (renderHistoryScreen) {
-                        StatisticsHistoryScreen(
-                            StatisticsHistoryViewModel(
-                                statisticsHistoryUseCase
-                            )
-                        )
-                    } else {
-                        CurrentStatisticsScreen(
-                            CurrentStatisticsViewModel(
-                                currentStatsUseCase,
-                                latestStatisticsUseCase
-                            )
-                        )
-                    }
+                    val navController = rememberNavController()
+                    Navigation(
+                        navController = navController,
+                        currentStatisticsViewModel = currentStatsViewModel,
+                        statisticsHistoryViewModel = historyViewModel
+                    )
                 }
             }
         }
@@ -53,6 +52,7 @@ class MainActivity : ComponentActivity() {
 
     }
 }
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
