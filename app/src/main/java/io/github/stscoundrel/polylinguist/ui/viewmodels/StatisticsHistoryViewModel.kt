@@ -32,6 +32,15 @@ class StatisticsHistoryViewModel(
         _isLoading.value = false
     }
 
+    fun updateHistory() {
+        setIsLoading()
+        _statistics.value = listOf()
+        viewModelScope.launch(defaultDispatcher) {
+            kotlinx.coroutines.delay(500)
+            getHistory()
+        }
+    }
+
     private fun getHistory() {
         setIsLoading()
         viewModelScope.launch(defaultDispatcher) {
