@@ -29,9 +29,11 @@ fun StatisticsPager(
     statistics: List<Statistics>,
     modifier: Modifier = Modifier
 ) {
+    val sortedStatistics = statistics.sortedByDescending{ it.date }
+
     HorizontalPager(state = pagerState) { page ->
         Column {
-            Statistics(statistics[page])
+            Statistics(sortedStatistics[page])
         }
     }
 
