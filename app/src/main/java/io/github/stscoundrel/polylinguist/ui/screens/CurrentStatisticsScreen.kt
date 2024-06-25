@@ -66,12 +66,6 @@ fun CurrentStatisticsScreen(
 
         }
 
-        NavigationButton(
-            navController,
-            "Statistics History",
-            NavigationRoutes.StatisticsHistory.route
-        )
-
         if (isLoading) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -82,6 +76,12 @@ fun CurrentStatisticsScreen(
                 LoadingSpinner()
             }
         }
+
+        NavigationButton(
+            navController,
+            "Statistics History",
+            NavigationRoutes.StatisticsHistory.route
+        )
     }
 }
 
