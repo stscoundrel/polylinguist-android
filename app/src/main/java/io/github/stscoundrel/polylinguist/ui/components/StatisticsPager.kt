@@ -33,7 +33,10 @@ fun StatisticsPager(
 
     HorizontalPager(state = pagerState) { page ->
         Column {
-            Statistics(sortedStatistics[page])
+            Statistics(
+                statistics = sortedStatistics[page],
+                comparisons = sortedStatistics.getOrNull(page + 1)
+            )
         }
     }
 
