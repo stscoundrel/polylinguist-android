@@ -12,4 +12,7 @@ data class Statistic(
 data class Statistics(
     val statistics: List<Statistic>,
     val date: LocalDate
-)
+) {
+    val size: Int
+        get() = statistics.sumOf { it.size }
+}
