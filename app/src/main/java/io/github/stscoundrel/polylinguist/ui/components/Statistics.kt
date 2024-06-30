@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.stscoundrel.polylinguist.domain.Statistics
+import io.github.stscoundrel.polylinguist.ui.utils.formatBytes
 import io.github.stscoundrel.polylinguist.ui.utils.formatPresentationDate
 
 @Composable
@@ -14,7 +15,13 @@ fun Statistics(statistics: Statistics, comparisons: Statistics? = null) {
     val sortedStats = statistics.statistics.sortedByDescending { it.percentage }
     val largestPercentage = sortedStats.first().percentage
 
-    Text(text = "Statistics for ${formatPresentationDate(statistics.date)}")
+    Text(
+        text = "Statistics for ${formatPresentationDate(statistics.date)}. Total of ${
+            formatBytes(
+                statistics.size
+            )
+        }"
+    )
     Spacer(modifier = Modifier.height(8.dp))
 
     sortedStats.forEachIndexed { index, statistic ->
