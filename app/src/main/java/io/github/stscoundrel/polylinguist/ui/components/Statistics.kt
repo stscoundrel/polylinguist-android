@@ -18,7 +18,8 @@ fun Statistics(statistics: Statistics, comparisons: Statistics? = null) {
     Text(
         text = "Statistics for ${formatPresentationDate(statistics.date)}. Total of ${
             formatBytes(
-                statistics.size
+                statistics.size,
+                comparisons?.size
             )
         }"
     )
