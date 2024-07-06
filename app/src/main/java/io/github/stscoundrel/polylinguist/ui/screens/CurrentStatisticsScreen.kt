@@ -33,6 +33,7 @@ fun CurrentStatisticsScreen(
     modifier: Modifier = Modifier
 ) {
     val statistics by statsViewModel.statistics.collectAsState()
+    val comparison by statsViewModel.comparison.collectAsState()
     val isLoading by statsViewModel.isLoading.collectAsState()
 
     Column(
@@ -47,7 +48,7 @@ fun CurrentStatisticsScreen(
         }
 
         statistics?.let { stats ->
-            Statistics(stats)
+            Statistics(statistics = stats, comparisons = comparison)
         }
 
         if (!statsViewModel.hasUpToDateStatistics()) {
