@@ -7,6 +7,7 @@ import io.github.stscoundrel.polylinguist.testdata.InMemoryStatisticsRepository
 import io.github.stscoundrel.polylinguist.testdata.StatisticFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -76,11 +77,14 @@ class CurrentStatisticsViewModelTest {
 
         // Should now contain statistics in the state.
         assertEquals(initialStatistics, viewModel.statistics.value)
+
+        // Should have no comparison value.
+        assertNull(viewModel.comparison.value)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun populatesCurrentStatisticsTest() = runTest {
+    fun populatesCurrentUpdatedStatisticsTest() = runTest {
         val viewModel = getViewModel()
 
         // Get initial load out of the way.
@@ -104,6 +108,9 @@ class CurrentStatisticsViewModelTest {
 
         // Should now contain statistics in the state.
         assertEquals(todaysStatistics, viewModel.statistics.value)
+
+        // Should've kept initial statistics as comparison value.
+        assertEquals(initialStatistics, viewModel.comparison.value)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
