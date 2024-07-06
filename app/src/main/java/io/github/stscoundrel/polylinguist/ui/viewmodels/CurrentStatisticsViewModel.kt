@@ -19,13 +19,15 @@ class CurrentStatisticsViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
     private val _statistics = MutableStateFlow<Statistics?>(null)
+    private val _comparison = MutableStateFlow<Statistics?>(null)
     private val _isLoading = MutableStateFlow<Boolean>(false)
     private val currentDate = LocalDate.now()
     val statistics: StateFlow<Statistics?> = _statistics.asStateFlow()
+    val comparison: StateFlow<Statistics?> = _comparison.asStateFlow()
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
-        getLatestStatistics()
+        getLatestKnownStatistics()
     }
 
     private fun setIsLoading() {
@@ -44,7 +46,7 @@ class CurrentStatisticsViewModel(
         return false
     }
 
-    fun getLatestStatistics() {
+    private fun getLatestKnownStatistics() {
         setIsLoading()
         viewModelScope.launch(defaultDispatcher) {
             val latestStatistics = getLatestStatisticsUseCase()
@@ -60,6 +62,9 @@ class CurrentStatisticsViewModel(
         viewModelScope.launch(defaultDispatcher) {
             val currentStatistics = getCurrentStatisticsUseCase()
 
+            // Preserve the previous stats as comparison value
+            // for the newly fetched stats.
+            _comparison.value = _statistics.value
             _statistics.value = currentStatistics
             setIsNotLoading()
         }
