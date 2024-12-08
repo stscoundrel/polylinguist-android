@@ -37,7 +37,7 @@ fun Statistics(statistics: Statistics, comparisons: Statistics? = null) {
     sortedStats.forEachIndexed { index, statistic ->
         val presentationIndex = index + 1
         val comparison =
-            comparisons?.statistics?.first { it.language == statistic.language }
+            comparisons?.statistics?.firstOrNull { it.language == statistic.language }
         StatisticTitle(presentationIndex, statistic, comparison)
         StatisticBar(
             statistic = statistic,
